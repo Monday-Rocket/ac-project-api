@@ -1,7 +1,3 @@
-module github.com/ac-project/api
+module ac-project/api
 
-go 1.16
-
-require (
-
-)
+go 1.19
