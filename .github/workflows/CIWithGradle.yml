@@ -53,8 +53,8 @@ jobs:
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        application_name: earth-github-action-test
-        environment_name: earthDocker
+        application_name: ac-project-api-server
+        environment_name: Acprojectapiserver-env-1
         version_label: earth-docker-${{steps.current-time.outputs.formattedTime}}
         region: ap-northeast-2
         deployment_package: deploy/deploy.zip
