@@ -12,6 +12,6 @@ COPY *.go ./
 
 RUN go build -o /ac-project-api
 
-EXPOSE 8080
+EXPOSE 5000
 
 CMD [ "/ac-project-api" ]
