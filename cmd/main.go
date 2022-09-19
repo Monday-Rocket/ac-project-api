@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"context"
@@ -6,9 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
-
 	firebase "firebase.google.com/go"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -17,6 +16,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("error initializing app: %v\n", err)
 	}
+	e := InitializeEvent()
+	e.Start()
 	auth, err := app.Auth(ctx)
 	if err != nil {
 		log.Fatal(err)
