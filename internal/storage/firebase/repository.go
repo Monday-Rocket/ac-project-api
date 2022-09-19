@@ -2,26 +2,29 @@ package firebase
 
 import (
 	"context"
-	"fmt"
 	"log"
 
-	firebase "firebase.google.com/go"
+	"firebase.google.com/go/auth"
 )
 
-func main() {
-	ctx := context.Background()
-	app, err := firebase.NewApp(ctx, nil)
-	if err != nil {
-		log.Fatalf("error initializing app: %v\n", err)
-	}
-	auth, err := app.Auth(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-	user, err := auth.GetUserByEmail(ctx, "ts4840644804@gmail.com")
-	if err != nil {
-		log.Fatal(err)
-	}
+type AuthHandler struct {
+	authClient *auth.Client
+}
 
-	fmt.Println(user.UID)
+func NewAuthHandler(
+	authClient *auth.Client,
+) AuthHandler {
+	return AuthHandler{authClient: authClient}
+}
+
+func GetUIDByEmail(
+	context context.Context,
+	authHandler AuthHandler,
+	email string,
+) string {
+	user, err := authHandler.authClient.GetUserByEmail(context, email)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return user.UID
 }
