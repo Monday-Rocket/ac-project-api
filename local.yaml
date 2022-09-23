@@ -1,0 +1,9 @@
+datasource:
+  db:
+    url: "tcp(awseb-e-gvz8vrbwyw-stack-awsebrdsdatabase-b2qahly9h8k6.cg4mmscfujvf.ap-northeast-2.rds.amazonaws.com:3306)/ebdb?charset=utf8mb4&parseTime=True&loc=Local"
+    userName: admin
+    password: acpr2022
+  redis:
+    url: ""
+server:
+  port: 8080
