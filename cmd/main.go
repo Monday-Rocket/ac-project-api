@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 	"os"
-	"gorm.io/driver/mysql"
 	"github.com/spf13/viper"
-	"gorm.io/gorm"
 	"ac-project/api/internal/config"
+	"ac-project/api/internal/storage/mysql"
+	// "time"
 )
 
 // main문이 실행되기전에 먼저 실행
@@ -27,7 +27,7 @@ func setRuntimeConfig(profile string) {
 	}
 	// viper는 읽어온 설정파일의 정보를 가지고있으니, 전역변수에 언마샬링해
 	// 애플리케이션의 원하는곳에서 사용하도록 합니다.
-	err = viper.Unmarshal(&configuration.RuntimeConf)
+	err = viper.Unmarshal(&config.RuntimeConf)
 	if err != nil {
 	   panic(err)
 	}
@@ -42,19 +42,23 @@ func initProfile() string {
 	}
 	fmt.Println("GOLANG_PROFILE: " + profile)
 	return profile
- }
+}
 
 func main() {
-  DatasourceUrl := configuration.RuntimeConf.Datasource.Db.Url
-  UserName := configuration.RuntimeConf.Datasource.Db.UserName
-  Password := configuration.RuntimeConf.Datasource.Db.Password
-  dsn := UserName + ":" + Password + "@" + DatasourceUrl
-  fmt.Println(dsn)
-  db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-  if err != nil {
-    panic("Db 연결에 실패하였습니다.")
-  } else {
-	fmt.Println("Db 연결에 성공하였습니다.")
-	fmt.Println(db)
-  }
+	db := config.ConnectDb()
+	// db.AutoMigrate(&mysql.User{})
+	// loc, err := time.LoadLocation("Asia/Seoul")
+	// if err != nil {
+    //     panic(err)
+    // }
+	// birth := time.Date(1997, 3, 28, 0, 0, 0, 0, loc)
+	// db.Create(&mysql.User{
+	// 	Name: "희진", 
+	// 	Email: "gmlwls3520@naver.com",
+	// 	Nickname: "은근",
+	// 	Birth: &birth,
+	// })
+	var user mysql.User
+	db.Where("name = ?", "희진").First(&user)
+	fmt.Println(user)
 }
