@@ -1,18 +1,32 @@
+//go:build wireinject
+// +build wireinject
+
 package wired
 
 import (
+	"ac-project/api/internal/storage/firebase"
+	"ac-project/api/internal/storage/mysql"
 	"context"
 
 	"github.com/google/wire"
 )
 
-func InitializeEvent(
+func InitializeUserRepository(
 	context.Context,
-) (Event, error) {
+) (mysql.UserRepository, error) {
 	wire.Build(
-		APIsSet,
-		DbsSet,
-		wire.Struct(new(Context), "*"),
+		mysql.NewRepository,
+		ConnectDb,
 	)
-	return Event{}, nil
+	return mysql.UserRepository{}, nil
+}
+
+func InitializeAuthHandler(
+	context.Context,
+) (firebase.AuthHandler, error) {
+	wire.Build(
+		firebase.NewAuthHandler,
+		newFirebaseClient,
+	)
+	return firebase.AuthHandler{}, nil
 }

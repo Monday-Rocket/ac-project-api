@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"ac-project/api/internal/config"
-	"ac-project/api/internal/storage/mysql"
+	"ac-project/cmd/wired"
 	"os"
 
 	firebase "firebase.google.com/go"
@@ -30,17 +30,20 @@ func main() {
 	// 	Nickname: "은근",
 	// 	Birth: &birth,
 	// })
-	var user mysql.User
-	db.Where("name = ?", "희진").First(&user)
-	fmt.Println(user)
+	//var user mysql.User
+	//db.Where("name = ?", "희진").First(&user)
+	//fmt.Println(user)
 
 	ctx := context.Background()
 	app, err := firebase.NewApp(ctx, nil)
 	if err != nil {
 		log.Fatalf("error initializing app: %v\n", err)
 	}
-	e := InitializeEvent()
-	e.Start()
+	authHandler := wired.InitializeAuthHandler(ctx)
+	authHandler.Start()
+
+	userRepository := wired.InitializeUserRepository(ctx)
+	userRepository.Start()
 	auth, err := app.Auth(ctx)
 	if err != nil {
 		log.Fatal(err)

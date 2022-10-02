@@ -1,12 +1,9 @@
 package wired
 
 import (
-	"context"
-	"log"
-
-	"gorm.io/gorm"
-	"gorm.io/driver/mysql"
 	"github.com/google/wire"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 
 	"ac-project/api/internal/config"
 )
@@ -25,10 +22,10 @@ func ConnectDb() *gorm.DB {
 	UserName := config.RuntimeConf.Datasource.Db.UserName
 	Password := config.RuntimeConf.Datasource.Db.Password
 	dsn := UserName + ":" + Password + "@" + DatasourceUrl
-	
+
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-	  panic("Db 연결에 실패하였습니다.")
+		panic("Db 연결에 실패하였습니다.")
 	}
 	return db
 }

@@ -1,14 +1,13 @@
 package mysql
 
 import (
-	"gorm.io/gorm"
 	"log"
+
+	"gorm.io/gorm"
 )
 
-
-
 type UserRepository struct {
-	Db	*gorm.DB
+	Db *gorm.DB
 }
 
 func NewRepository(
