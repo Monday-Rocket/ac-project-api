@@ -8,7 +8,6 @@ import (
 
 	"ac-project/api/internal/config"
 	"ac-project/api/internal/storage/mysql"
-	"fmt"
 	"os"
 
 	firebase "firebase.google.com/go"
@@ -18,7 +17,7 @@ import (
 )
 
 func main() {
-	db := config.ConnectDb()
+	// db := config.ConnectDb()
 	// db.AutoMigrate(&mysql.User{})
 	// loc, err := time.LoadLocation("Asia/Seoul")
 	// if err != nil {

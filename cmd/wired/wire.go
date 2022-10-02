@@ -11,6 +11,7 @@ func InitializeEvent(
 ) (Event, error) {
 	wire.Build(
 		APIsSet,
+		DbsSet,
 		wire.Struct(new(Context), "*"),
 	)
 	return Event{}, nil
