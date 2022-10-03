@@ -7,10 +7,13 @@ import (
 
 type User struct {
   	gorm.Model
-	Name         string
-	Email        string
 	Nickname     string
-	Birth        *time.Time
-	Sex 		 string
+	Job          string
+	UID			 string
+}
+
+type JobGroup struct {
+	gorm.Model
+	name		 string
 }
 

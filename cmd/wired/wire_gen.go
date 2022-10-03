@@ -7,21 +7,24 @@
 package wired
 
 import (
-	"ac-project/api/internal/storage/firebase"
-	"ac-project/api/internal/storage/mysql"
+	"ac-project/api/internal/service/user"
 	"context"
+	"github.com/google/wire"
 )
 
 // Injectors from wire.go:
 
-func InitializeUserRepository(contextContext context.Context) (mysql.UserRepository, error) {
-	db := ConnectDb()
-	userRepository := mysql.NewRepository(db)
-	return userRepository, nil
+func InitalizeUserService(contextContext context.Context) (user.Service, error) {
+	userClientSet := NewClients()
+	userRepoSet := NewUserRepos(userClientSet)
+	service := NewService(userRepoSet)
+	return service, nil
 }
 
-func InitializeAuthHandler(contextContext context.Context) (firebase.AuthHandler, error) {
-	client := newFirebaseClient()
-	authHandler := firebase.NewAuthHandler(client)
-	return authHandler, nil
-}
+// wire.go:
+
+var userSet = wire.NewSet(
+	NewService,
+	NewUserRepos,
+	NewClients,
+)

@@ -17,7 +17,7 @@ func NewAuthHandler(
 	return AuthHandler{authClient: authClient}
 }
 
-func GetUIDByEmail(
+func (a AuthHandler) GetUIDByEmail(
 	context context.Context,
 	authHandler AuthHandler,
 	email string,

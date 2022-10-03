@@ -27,7 +27,7 @@ func CreateUser(
 	return result.RowsAffected
 }
 
-func GetUserByName(
+func (r UserRepository) GetUserByName(
 	Name string,
 	UserRepository UserRepository,
 ) User {
