@@ -1,67 +1,41 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"log"
-	"net/http"
 
 	"ac-project/api/internal/config"
-	"ac-project/cmd/wired"
+	"ac-project/api/internal/http/rest"
 	"os"
 
-	firebase "firebase.google.com/go"
-	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	// "time"
 )
 
 func main() {
-	// db := config.ConnectDb()
-	// db.AutoMigrate(&mysql.User{})
-	// loc, err := time.LoadLocation("Asia/Seoul")
+	// ctx := context.Background()
+	// app, err := firebase.NewApp(ctx, nil)
 	// if err != nil {
-	//     panic(err)
+	// 	log.Fatalf("error initializing app: %v\n", err)
 	// }
-	// birth := time.Date(1997, 3, 28, 0, 0, 0, 0, loc)
-	// db.Create(&mysql.User{
-	// 	Name: "희진",
-	// 	Email: "gmlwls3520@naver.com",
-	// 	Nickname: "은근",
-	// 	Birth: &birth,
-	// })
-	//var user mysql.User
-	//db.Where("name = ?", "희진").First(&user)
-	//fmt.Println(user)
+	// authHandler := wired.InitializeAuthHandler(ctx)
+	// authHandler.Start()token
 
-	ctx := context.Background()
-	app, err := firebase.NewApp(ctx, nil)
-	if err != nil {
-		log.Fatalf("error initializing app: %v\n", err)
-	}
-	authHandler := wired.InitializeAuthHandler(ctx)
-	authHandler.Start()
+	// userRepository := wired.InitializeUserRepository(ctx)
+	// userRepository.Start()
+	// auth, err := app.Auth(ctx)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// userByEmail, err := auth.GetUserByEmail(ctx, "ts4840644804@gmail.com")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	userRepository := wired.InitializeUserRepository(ctx)
-	userRepository.Start()
-	auth, err := app.Auth(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-	userByEmail, err := auth.GetUserByEmail(ctx, "ts4840644804@gmail.com")
-	if err != nil {
-		log.Fatal(err)
-	}
+	// fmt.Println(userByEmail.UID)
 
-	fmt.Println(userByEmail.UID)
-
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	// set up the HTTP server
+	var userService = InitalizeUserService
+	router := rest.Handler(userService)
 }
 
 // main문이 실행되기전에 먼저 실행

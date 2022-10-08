@@ -1,25 +1,34 @@
 package wired
 
 import (
+	"ac-project/api/internal/service/user"
+
 	"firebase.google.com/go/auth"
 	"gorm.io/gorm"
-	"ac-project/api/internal/service/user"
 )
 
 type UserRepoSet struct {
 	UserClientSet UserClientSet
-} 
+}
 
 type UserClientSet struct {
 	authclient auth.Client
-	dbclient gorm.DB
+	dbclient   gorm.DB
 }
+
+// type UserHandler struct {
+// 	userService user.Service
+// }
 
 func NewClients() UserClientSet {
 	var authclient = newFirebaseClient()
 	var dbclient = ConnectDb()
 	return UserClientSet{*authclient, *dbclient}
 }
+
+// func NewHandler() UserHandlerSet {
+// 	var
+// }
 
 func NewService(repoSet UserRepoSet) user.Service {
 	return &user.ServiceImpl{repoSet}

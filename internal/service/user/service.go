@@ -2,9 +2,11 @@ package user
 
 import (
 	"context"
+	"errors"
+
 	"ac-project/api/internal/storage/firebase"
 	"ac-project/api/internal/storage/mysql"
-	"errors"
+	"ac-project/cmd/wired"
 )
 
 var ErrNotFound = errors.New("user not found")
@@ -17,7 +19,7 @@ type AuthHandler interface {
 	GetUIDByEmail(
 		context context.Context,
 		authHandler firebase.AuthHandler,
-		email string
+		email string,
 	) string
 }
 
@@ -25,11 +27,11 @@ type UserRepository interface {
 	GetUserByName(
 		Name string,
 		UserRepository mysql.UserRepository,
-	) mysql.User 
+	) mysql.User
 }
 
 type ServiceImpl struct {
-	UserRepoSet UserRepoSet
+	UserRepoSet wired.UserRepoSet
 }
 
 func (s ServiceImpl) AddUser(token string) error {
