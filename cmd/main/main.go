@@ -10,6 +10,7 @@ import (
 	"ac-project/api/internal/http/rest"
 	"ac-project/api/cmd/wired"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/viper"
 	
@@ -19,7 +20,12 @@ import (
 )
 
 func main() {
-
+	ex, err := os.Executable()
+    if err != nil {
+        panic(err)
+    }
+	exPath := filepath.Dir(ex)
+	fmt.Println(exPath)
 	opt := option.WithCredentialsFile("./serviceAccountKey.json")
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {

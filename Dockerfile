@@ -2,16 +2,14 @@
 
 FROM golang:1.17-alpine
 
-WORKDIR /Users/heejin/git/ac-project-api
+WORKDIR /app
 
-COPY go.mod ./
-COPY go.sum ./
-RUN go mod download
+COPY . .
 
-COPY *.go ./
+RUN go get -d -v ./...
 
-RUN go build -o /ac-project-api ./cmd/main
+RUN go install -v ./...
 
 EXPOSE 5000
 
-CMD [ "/ac-project-api" ]
+CMD [ "main" ]
