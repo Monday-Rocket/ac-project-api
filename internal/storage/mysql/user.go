@@ -4,10 +4,10 @@ import (
 	"gorm.io/gorm"
 )
 
-type User struct {
+type UserRecord struct {
 	gorm.Model
 	Nickname string
-	Job      string
+	Job      int
 	UID      string
 }
 

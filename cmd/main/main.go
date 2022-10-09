@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"context"
 
 	"ac-project/api/internal/config"
 	"ac-project/api/internal/http/rest"
@@ -11,30 +12,21 @@ import (
 	"os"
 
 	"github.com/spf13/viper"
-	// "time"
+	
+	firebase "firebase.google.com/go"
+	"google.golang.org/api/option"
+
 )
 
 func main() {
-	// ctx := context.Background()
-	// app, err := firebase.NewApp(ctx, nil)
-	// if err != nil {
-	// 	log.Fatalf("error initializing app: %v\n", err)
-	// }
-	// authHandler := wired.InitializeAuthHandler(ctx)
-	// authHandler.Start()token
 
-	// userRepository := wired.InitializeUserRepository(ctx)
-	// userRepository.Start()
-	// auth, err := app.Auth(ctx)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// userByEmail, err := auth.GetUserByEmail(ctx, "ts4840644804@gmail.com")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	opt := option.WithCredentialsFile("./serviceAccountKey.json")
+	app, err := firebase.NewApp(context.Background(), nil, opt)
+	if err != nil {
+		fmt.Errorf("error initializing app: %v", err)
+	}
 
-	// fmt.Println(userByEmail.UID)
+	fmt.Println(app)
 
 	// set up the HTTP server
 	var userService, error = wired.InitalizeUserService()
@@ -54,7 +46,7 @@ func init() {
 
 // PROFILE을 기반으로 config파일을 읽고 전역변수로 언마실링
 func setRuntimeConfig(profile string) {
-	viper.AddConfigPath("../")
+	viper.AddConfigPath("./")
 	// 환경변수에서 읽어온 profile이름의 yaml파일을 configPath로 설정합니다.
 	viper.SetConfigName(profile)
 	viper.SetConfigType("yaml")

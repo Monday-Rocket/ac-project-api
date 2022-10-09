@@ -2,7 +2,7 @@ package mysql
 
 import (
 	"log"
-
+	"ac-project/api/internal/service/user"
 	"gorm.io/gorm"
 )
 
@@ -10,24 +10,30 @@ type UserRepository struct {
 	Db *gorm.DB
 }
 
+func (r UserRepository) CreateUser(
+	User user.User,
+) uint {
+	var userRecord = UserRecord {
+		Nickname : User.Nickname,
+		Job : User.Job,
+		UID : User.UID,
+	}
 
-
-func CreateUser(
-	User User,
-	UserRepository UserRepository,
-) int64 {
-	result := UserRepository.Db.Create(&User)
+	result := r.Db.Create(&userRecord)
 	if result.Error != nil {
 		log.Fatal(result.Error)
 	}
-	return result.RowsAffected
+	return userRecord.ID
 }
 
-func (r UserRepository) GetUserByName(
-	Name string,
-	UserRepository UserRepository,
-) User {
-	var user User
-	UserRepository.Db.Where("name = ?", Name).First(&user)
-	return user
+func (r UserRepository) GetUserByNickname(
+	Nickname string,
+) user.User {
+	var userRecord UserRecord
+	r.Db.Where("nickname = ?", Nickname).First(&userRecord)
+	return user.User {
+		Nickname: "",
+		UID: "",
+		Job: 3,
+	}
 }

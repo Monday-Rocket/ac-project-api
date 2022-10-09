@@ -3,15 +3,16 @@ package user
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"ac-project/api/internal/storage/firebase"
-	"ac-project/api/internal/storage/mysql"
+	jwt "github.com/golang-jwt/jwt/v4"
 )
 
 var ErrNotFound = errors.New("user not found")
 
 type Service interface {
-	AddUser(token string) error
+	AddUser(token string) uint
 }
 
 type AuthHandler interface {
@@ -23,10 +24,12 @@ type AuthHandler interface {
 }
 
 type UserRepository interface {
-	GetUserByName(
-		Name string,
-		UserRepository mysql.UserRepository,
-	) mysql.User
+	GetUserByNickname(
+		Nickname string,
+	) User
+	CreateUser(
+		User User,
+	) uint
 }
 
 type UserRepoSet struct {
@@ -39,7 +42,28 @@ type ServiceImpl struct {
 }
 
 
-func (s ServiceImpl) AddUser(token string) error {
+func (s ServiceImpl) AddUser(token string) uint {
+	claims := jwt.MapClaims{}
+	parsedToken, err := jwt.Parse(token, nil)
+	fmt.Println(parsedToken)
+
+	// ... error handling
+	if (err != nil) {
+		fmt.Println(err)
+	}
+	
+	// do something with decoded claims
+	for key, val := range claims {
+		fmt.Printf("Key: %v, value: %v\n", key, val)
+	}
+	
+	// var userInfo = json.NewEncoder(w).Encode(parsedToken)
+
 	// authHandler로 토큰 인증 후 받은 UID DB에 저장
-	return nil
+	var res = s.UserRepoSet.MysqlRepo.CreateUser(User{
+		Nickname: "희진", 
+		Job: 1,
+		UID: "test",
+	})
+	return res
 }

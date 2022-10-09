@@ -1,11 +1,10 @@
 package rest
 
 import (
-	"encoding/json"
 	"net/http"
+	"encoding/json"
 
 	"ac-project/api/internal/service/user"
-
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -24,11 +23,11 @@ func Handler(a user.Service) http.Handler {
 
 func createUser(s user.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		var token = r.Header["x-auth-token"]
-		// error handling omitted for simplicity
+		var jwtToken = r.Header["X-Auth-Token"][0]
 
+		var res = s.AddUser(jwtToken)
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(token)
+		json.NewEncoder(w).Encode(res)
 	}
 }
 

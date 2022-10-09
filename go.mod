@@ -5,9 +5,11 @@ go 1.17
 require (
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/gin-gonic/gin v1.8.1
+	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/google/wire v0.5.0
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/spf13/viper v1.13.0
+	google.golang.org/api v0.81.0
 	gorm.io/driver/mysql v1.3.6
 	gorm.io/gorm v1.23.10
 )
@@ -56,7 +58,6 @@ require (
 	golang.org/x/sys v0.0.0-20220913153101-76c7481b5158 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/xerrors v0.0.0-20220517211312-f3a8303e98df // indirect
-	google.golang.org/api v0.81.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220519153652-3a47de7e79bd // indirect
 	google.golang.org/grpc v1.46.2 // indirect

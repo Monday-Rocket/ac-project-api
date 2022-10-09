@@ -1,5 +1,7 @@
 package user
 
-type createUser struct {
-	token string
+type User struct {
+	Nickname string
+	Job      int
+	UID      string
 }

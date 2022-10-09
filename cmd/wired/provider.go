@@ -17,10 +17,6 @@ type UserClientSet struct {
 	Dbclient   *gorm.DB
 }
 
-// type UserHandler struct {
-// 	userService user.Service
-// }
-
 func newRepository(
 	Db *gorm.DB,
 ) mysql.UserRepository {
@@ -36,6 +32,7 @@ func newAuthHandler(
 func newClients() *UserClientSet {
 	var authclient = newFirebaseClient()
 	var dbclient = ConnectDb()
+	dbclient.AutoMigrate(&mysql.UserRecord{})
 	return &UserClientSet{authclient, dbclient}
 }
 
