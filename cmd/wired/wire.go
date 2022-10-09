@@ -4,21 +4,18 @@
 package wired
 
 import (
-	"context"
 	"ac-project/api/internal/service/user"
 	"github.com/google/wire"
 )
 
 var userSet = wire.NewSet(
-	NewService,
-	NewUserRepos,
-	NewClients,
+	newService,
+	newUserRepos,
+	newClients,
 )
 
 
-func InitalizeUserService(
-	context.Context,
-) (user.Service, error) {
+func InitalizeUserService() (user.Service, error) {
 	wire.Build(
 		userSet,
 	)

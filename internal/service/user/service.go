@@ -6,7 +6,6 @@ import (
 
 	"ac-project/api/internal/storage/firebase"
 	"ac-project/api/internal/storage/mysql"
-	"ac-project/cmd/wired"
 )
 
 var ErrNotFound = errors.New("user not found")
@@ -30,9 +29,15 @@ type UserRepository interface {
 	) mysql.User
 }
 
-type ServiceImpl struct {
-	UserRepoSet wired.UserRepoSet
+type UserRepoSet struct {
+	MysqlRepo UserRepository
+	FirebaseRepo AuthHandler
 }
+
+type ServiceImpl struct {
+	UserRepoSet UserRepoSet
+}
+
 
 func (s ServiceImpl) AddUser(token string) error {
 	// authHandler로 토큰 인증 후 받은 UID DB에 저장

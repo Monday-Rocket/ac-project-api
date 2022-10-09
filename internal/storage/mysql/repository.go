@@ -10,11 +10,7 @@ type UserRepository struct {
 	Db *gorm.DB
 }
 
-func NewRepository(
-	Db *gorm.DB,
-) UserRepository {
-	return UserRepository{Db: Db}
-}
+
 
 func CreateUser(
 	User User,

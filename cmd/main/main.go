@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
 
 	"ac-project/api/internal/config"
 	"ac-project/api/internal/http/rest"
+	"ac-project/api/cmd/wired"
 	"os"
 
 	"github.com/spf13/viper"
@@ -34,8 +37,13 @@ func main() {
 	// fmt.Println(userByEmail.UID)
 
 	// set up the HTTP server
-	var userService = InitalizeUserService
+	var userService, error = wired.InitalizeUserService()
+	if (error != nil) {
+		fmt.Println(error)
+	}
 	router := rest.Handler(userService)
+	fmt.Println("The beer server is on tap now: http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
 // main문이 실행되기전에 먼저 실행

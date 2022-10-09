@@ -8,21 +8,17 @@ import (
 )
 
 type AuthHandler struct {
-	authClient *auth.Client
+	AuthClient *auth.Client
 }
 
-func NewAuthHandler(
-	authClient *auth.Client,
-) AuthHandler {
-	return AuthHandler{authClient: authClient}
-}
+
 
 func (a AuthHandler) GetUIDByEmail(
 	context context.Context,
 	authHandler AuthHandler,
 	email string,
 ) string {
-	user, err := authHandler.authClient.GetUserByEmail(context, email)
+	user, err := authHandler.AuthClient.GetUserByEmail(context, email)
 	if err != nil {
 		log.Fatal(err)
 	}

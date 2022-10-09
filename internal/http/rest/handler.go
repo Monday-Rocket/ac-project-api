@@ -24,15 +24,11 @@ func Handler(a user.Service) http.Handler {
 
 func createUser(s user.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		decoder := json.NewDecoder(r.Header)
-
 		var token = r.Header["x-auth-token"]
-
-		user = s.AddUser(token)
 		// error handling omitted for simplicity
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(user)
+		json.NewEncoder(w).Encode(token)
 	}
 }
 
