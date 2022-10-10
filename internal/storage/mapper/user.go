@@ -1,5 +1,0 @@
-pakcage mapper
-
-import (
-	mysql
-)

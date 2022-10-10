@@ -1,13 +1,13 @@
 {
     "AWSEBDockerrunVersion": "1",
     "Image": {
-      "Name": "{AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-2.amazonaws.com/ac-project:latest",
+      "Name": "809732216935.dkr.ecr.ap-northeast-2.amazonaws.com/ac-project:latest",
       "Update": "true"
     },
     "Ports": [
       {
-        "ContainerPort": "5000",
-        "HostPort": "5000"
+        "ContainerPort": "80",
+        "HostPort": "80"
       }
     ]
   }
