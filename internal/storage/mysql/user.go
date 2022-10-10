@@ -3,10 +3,11 @@ package mysql
 type UserRecord struct {
 	UID        string `gorm:"primaryKey"`
 	Nickname   *string
-	JobGroup   JobGroupRecord `gorm:"foreignKey:ID"`
+	JobGroupID *uint
+	JobGroup   JobGroupRecord
 }
 
 type JobGroupRecord struct {
-	ID   uint
-	name string
+	ID   uint `gorm:"primaryKey"`
+	Name string
 }

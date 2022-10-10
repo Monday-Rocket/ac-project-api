@@ -3,26 +3,25 @@ package config
 var RuntimeConf = RuntimeConfig{}
 
 type RuntimeConfig struct {
-   Datasource Datasource `yaml:"datasource"`
-   Server     Server     `yaml:"server"`
+	Datasource Datasource `yaml:"datasource"`
+	Server     Server     `yaml:"server"`
 }
 
 type Datasource struct {
-	Db      Db `yaml:"db"`
+	Db    Db    `yaml:"db"`
 	Redis Redis `yaml:"redis"`
- }
+}
 
 type Db struct {
-   Url      string `yaml:"url"`
-   UserName string `yaml:"userName"`
-   Password string `yaml:"password"`
+	Url      string `yaml:"url"`
+	UserName string `yaml:"userName"`
+	Password string `yaml:"password"`
 }
 
 type Redis struct {
-	Url      string `yaml:"url"`
+	Url string `yaml:"url"`
 }
 
 type Server struct {
-   Port int `yaml:"port"`
+	Port int `yaml:"port"`
 }
-

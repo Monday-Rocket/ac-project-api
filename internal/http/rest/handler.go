@@ -1,10 +1,11 @@
 package rest
 
 import (
-	"net/http"
 	"encoding/json"
+	"net/http"
 
 	"ac-project/api/internal/service/user"
+
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -31,22 +32,35 @@ func createUser(s user.Service) func(w http.ResponseWriter, r *http.Request, _ h
 	}
 }
 
+type UpdateUserRequest struct {
+	Nickname   string
+	JobGroupId uint `json:"job_group_id"`
+}
+
 func updateUser(s user.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		var jwtToken = r.Header["X-Auth-Token"][0]
-		decoder := json.NewDecoder(r.Body)
-		var updatingUser updatingUser
-		err := decoder.Decode(&updatingUser)
+		var request UpdateUserRequest
+
+		// Try to decode the request body into the struct. If there is an error,
+		// respond to the client with the error message and a 400 status code.
+		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		var res = s.UpdateUser(jwtToken, updatingUser.nickname, updatingUser.job_group_id)
+		var res = s.UpdateUser(jwtToken, request.Nickname, request.JobGroupId)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(res)
 	}
 }
+
+// func getJobGroups(s user.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+// 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+// 		var
+// 	}
+// }
 
 // func getUser(a user.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 // 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {

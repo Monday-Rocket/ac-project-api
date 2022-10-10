@@ -1,9 +1,12 @@
 package mysql
 
 import (
-	"log"
 	"ac-project/api/internal/service/user"
+	"fmt"
+	"log"
+
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type UserRepository struct {
@@ -15,9 +18,9 @@ func (r UserRepository) FindJobGroupById(
 ) user.JobGroup {
 	var jobGroupRecord JobGroupRecord
 	r.Db.Where("id = ?", Id).First(&jobGroupRecord)
-	return user.JobGroup {
-		ID: jobGroupRecord.ID,
-		Name: jobGroupRecord.name,
+	return user.JobGroup{
+		ID:   jobGroupRecord.ID,
+		Name: jobGroupRecord.Name,
 	}
 }
 
@@ -26,10 +29,10 @@ func (r UserRepository) CreateUser(
 ) string {
 	var jobGroup JobGroupRecord
 
-	var userRecord = UserRecord {
-		Nickname : User.Nickname,
-		JobGroup : jobGroup,
-		UID : User.UID,
+	var userRecord = UserRecord{
+		Nickname: User.Nickname,
+		JobGroup: jobGroup,
+		UID:      User.UID,
 	}
 
 	result := r.Db.Create(&userRecord)
@@ -44,29 +47,31 @@ func (r UserRepository) UpdateUser(
 ) user.User {
 	var userRecord = toRecord(User)
 
-	r.Db.Model(&userRecord).Updates(userRecord)
+	r.Db.Model(&userRecord).Clauses(clause.Returning{}).Updates(userRecord)
 
 	return toEntity(userRecord)
 }
 
 func toRecord(user user.User) UserRecord {
 	return UserRecord{
-		UID: user.UID,
-		Nickname: user.Nickname,
-		JobGroup: JobGroupRecord {
-			ID: user.JobGroup.ID,
-			name: user.JobGroup.Name,
+		UID:        user.UID,
+		Nickname:   user.Nickname,
+		JobGroupID: &user.JobGroup.ID,
+		JobGroup: JobGroupRecord{
+			ID:   user.JobGroup.ID,
+			Name: user.JobGroup.Name,
 		},
 	}
 }
 
 func toEntity(userRecord UserRecord) user.User {
+	fmt.Println(userRecord.JobGroup.Name)
 	return user.User{
-		UID : userRecord.UID,
-		Nickname : userRecord.Nickname,
-		JobGroup : &user.JobGroup{
-			ID: userRecord.JobGroup.ID,
-			Name: userRecord.JobGroup.name,
+		UID:      userRecord.UID,
+		Nickname: userRecord.Nickname,
+		JobGroup: &user.JobGroup{
+			ID:   userRecord.JobGroup.ID,
+			Name: userRecord.JobGroup.Name,
 		},
 	}
 }

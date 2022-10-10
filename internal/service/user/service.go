@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"ac-project/api/internal/storage/firebase"
+
 	jwt "github.com/golang-jwt/jwt/v4"
 )
 
@@ -40,7 +41,7 @@ type UserRepository interface {
 }
 
 type UserRepoSet struct {
-	MysqlRepo UserRepository
+	MysqlRepo    UserRepository
 	FirebaseRepo AuthHandler
 }
 
@@ -48,13 +49,12 @@ type ServiceImpl struct {
 	UserRepoSet UserRepoSet
 }
 
-
 func (s ServiceImpl) AddUser(token string) string {
 	var UID = getUIDFromJwt(token)
 
 	// authHandler로 토큰 인증 후 받은 UID DB에 저장
 	return s.UserRepoSet.MysqlRepo.CreateUser(User{
-		UID: UID,
+		UID:      UID,
 		Nickname: nil,
 		JobGroup: nil,
 	})
@@ -67,9 +67,9 @@ func (s ServiceImpl) UpdateUser(token string, nickname string, jobGroupId uint) 
 
 	// authHandler로 토큰 인증 후 받은 UID DB에 저장
 	return s.UserRepoSet.MysqlRepo.UpdateUser(User{
-		UID: UID,
-		Nickname : &nickname,
-		JobGroup : &jobGroup,
+		UID:      UID,
+		Nickname: &nickname,
+		JobGroup: &jobGroup,
 	})
 }
 
@@ -80,15 +80,15 @@ func getUIDFromJwt(token string) string {
 	fmt.Println(parsedToken)
 
 	// ... error handling
-	if (err != nil) {
+	if err != nil {
 		fmt.Println(err)
 	}
-	
+
 	// do something with decoded claims
 	for key, val := range claims {
 		fmt.Printf("Key: %v, value: %v\n", key, val)
 	}
-	
+
 	claims, ok := parsedToken.Claims.(jwt.MapClaims)
 
 	if !ok {
