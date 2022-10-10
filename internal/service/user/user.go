@@ -1,7 +1,7 @@
 package user
 
 type User struct {
-	UID      string
+	UID      string 
 	Nickname *string
 	JobGroup *JobGroup
 }

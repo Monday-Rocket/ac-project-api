@@ -10,8 +10,6 @@ import (
 	"gorm.io/gorm"
 )
 
-
-
 type UserClientSet struct {
 	Authclient *auth.Client
 	Dbclient   *gorm.DB
@@ -46,4 +44,3 @@ func newUserRepos(clientset *UserClientSet) user.UserRepoSet {
 func newService(repoSet user.UserRepoSet) user.Service {
 	return &user.ServiceImpl{repoSet}
 }
-

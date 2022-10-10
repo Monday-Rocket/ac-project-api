@@ -12,7 +12,8 @@ import (
 var ErrNotFound = errors.New("user not found")
 
 type Service interface {
-	AddUser(token string) uint
+	AddUser(token string) string
+	UpdateUser(token string, nickname string, jobGroupId uint) User
 }
 
 type AuthHandler interface {
@@ -29,7 +30,13 @@ type UserRepository interface {
 	// ) User
 	CreateUser(
 		User User,
-	) uint
+	) string
+	UpdateUser(
+		user User,
+	) User
+	FindJobGroupById(
+		JobGroupId uint,
+	) JobGroup
 }
 
 type UserRepoSet struct {
@@ -42,8 +49,33 @@ type ServiceImpl struct {
 }
 
 
-func (s ServiceImpl) AddUser(token string) uint {
+func (s ServiceImpl) AddUser(token string) string {
+	var UID = getUIDFromJwt(token)
+
+	// authHandler로 토큰 인증 후 받은 UID DB에 저장
+	return s.UserRepoSet.MysqlRepo.CreateUser(User{
+		UID: UID,
+		Nickname: nil,
+		JobGroup: nil,
+	})
+}
+
+func (s ServiceImpl) UpdateUser(token string, nickname string, jobGroupId uint) User {
+	var UID = getUIDFromJwt(token)
+
+	var jobGroup = s.UserRepoSet.MysqlRepo.FindJobGroupById(jobGroupId)
+
+	// authHandler로 토큰 인증 후 받은 UID DB에 저장
+	return s.UserRepoSet.MysqlRepo.UpdateUser(User{
+		UID: UID,
+		Nickname : &nickname,
+		JobGroup : &jobGroup,
+	})
+}
+
+func getUIDFromJwt(token string) string {
 	claims := jwt.MapClaims{}
+
 	parsedToken, err := jwt.Parse(token, nil)
 	fmt.Println(parsedToken)
 
@@ -57,17 +89,11 @@ func (s ServiceImpl) AddUser(token string) uint {
 		fmt.Printf("Key: %v, value: %v\n", key, val)
 	}
 	
-	// var userInfo = json.NewEncoder(w).Encode(parsedToken)
-	claimsMap, ok := parsedToken.Claims.(jwt.MapClaims)
-	if !ok {
-		fmt.Println("bad claims type")
-	}
-	UID := claimsMap["UID"].(string)
+	claims, ok := parsedToken.Claims.(jwt.MapClaims)
 
-	// authHandler로 토큰 인증 후 받은 UID DB에 저장
-	return s.UserRepoSet.MysqlRepo.CreateUser(User{
-		UID: UID,
-		Nickname: nil,
-		JobGroup: nil,
-	})
+	if !ok {
+		fmt.Println("error")
+	}
+
+	return claims["user_id"].(string)
 }

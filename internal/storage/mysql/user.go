@@ -1,17 +1,12 @@
 package mysql
 
-import (
-	"gorm.io/gorm"
-)
-
 type UserRecord struct {
-	gorm.Model
-	UID        string
+	UID        string `gorm:"primaryKey"`
 	Nickname   *string
-	JobGroup   *JobGroupRecord
+	JobGroup   JobGroupRecord `gorm:"foreignKey:ID"`
 }
 
 type JobGroupRecord struct {
-	gorm.Model
+	ID   uint
 	name string
 }
