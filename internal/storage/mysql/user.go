@@ -1,16 +1,13 @@
 package mysql
 
-import (
-	"time"
-	"gorm.io/gorm"
-)
-
-type User struct {
-  	gorm.Model
-	Name         string
-	Email        string
-	Nickname     string
-	Birth        *time.Time
-	Sex 		 string
+type UserRecord struct {
+	UID        string `gorm:"primaryKey"`
+	Nickname   *string
+	JobGroupID *uint
+	JobGroup   JobGroupRecord
 }
 
+type JobGroupRecord struct {
+	ID   uint `gorm:"primaryKey"`
+	Name string
+}

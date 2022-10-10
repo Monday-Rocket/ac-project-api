@@ -4,14 +4,14 @@ FROM golang:1.17-alpine
 
 WORKDIR /app
 
-COPY go.mod ./
-COPY go.sum ./
-RUN go mod download
+COPY . .
 
-COPY *.go ./
+RUN go get -d -v ./...
 
-RUN go build -o /ac-project-api
+RUN go install -v ./...
 
 EXPOSE 5000
 
-CMD [ "/ac-project-api" ]
+ENV GOOGLE_APPLICATION_CREDENTIALS="./serviceAccountKey.json"
+
+CMD [ "main" ]
