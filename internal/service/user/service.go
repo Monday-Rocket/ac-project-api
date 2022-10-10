@@ -15,6 +15,8 @@ var ErrNotFound = errors.New("user not found")
 type Service interface {
 	AddUser(token string) string
 	UpdateUser(token string, nickname string, jobGroupId uint) User
+	FindAllJobGroup() []JobGroup
+	FindUserById(UID string) User
 }
 
 type AuthHandler interface {
@@ -38,6 +40,10 @@ type UserRepository interface {
 	FindJobGroupById(
 		JobGroupId uint,
 	) JobGroup
+	FindAllJobGroup() []JobGroup
+	FindUserById(
+		UID string,
+	) User
 }
 
 type UserRepoSet struct {
@@ -96,4 +102,14 @@ func getUIDFromJwt(token string) string {
 	}
 
 	return claims["user_id"].(string)
+}
+
+func (s ServiceImpl) FindAllJobGroup() []JobGroup {
+	return s.UserRepoSet.MysqlRepo.FindAllJobGroup()
+}
+
+func (s ServiceImpl) FindUserById(
+	UID string,
+) User {
+	return s.UserRepoSet.MysqlRepo.FindUserById(UID)
 }

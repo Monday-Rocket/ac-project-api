@@ -52,6 +52,22 @@ func (r UserRepository) UpdateUser(
 	return toEntity(userRecord)
 }
 
+func (r UserRepository) FindAllJobGroup() []user.JobGroup {
+	var records []JobGroupRecord
+	r.Db.Find(&records)
+	var entities []user.JobGroup
+	for _, record := range records {
+		entities = append(entities, user.JobGroup{ID: record.ID, Name: record.Name})
+	}
+	return entities
+}
+
+func (r UserRepository) FindUserById(UID string) user.User {
+	var record UserRecord
+	r.Db.Preload("JobGroup").Where("UID = ?", UID).First(&record)
+	return toEntity(record)
+}
+
 func toRecord(user user.User) UserRecord {
 	return UserRecord{
 		UID:        user.UID,

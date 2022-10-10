@@ -3,6 +3,7 @@ package rest
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"ac-project/api/internal/service/user"
 
@@ -14,19 +15,24 @@ func Handler(a user.Service) http.Handler {
 
 	router.POST("/users", createUser(a))
 	router.PATCH("/users", updateUser(a))
-	// router.GET("/users", getUser(a))
+	router.GET("/users/:id", getUser(a))
 
-	// router.POST("/job-groups", getJobGroups(a))
+	router.GET("/job-groups", getJobGroups(a))
 	// router.POST("/topics", getTopics(a))
 
 	return router
+}
+
+type DefaultResponse struct {
+	Status int         `json:"status"`
+	Data   interface{} `json:"data"`
 }
 
 func createUser(s user.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		var jwtToken = r.Header["X-Auth-Token"][0]
 
-		var res = s.AddUser(jwtToken)
+		var res = DefaultResponse{Status: 0, Data: s.AddUser(jwtToken)}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(res)
 	}
@@ -50,33 +56,25 @@ func updateUser(s user.Service) func(w http.ResponseWriter, r *http.Request, _ h
 			return
 		}
 
-		var res = s.UpdateUser(jwtToken, request.Nickname, request.JobGroupId)
+		var res = DefaultResponse{Status: 0, Data: s.UpdateUser(jwtToken, request.Nickname, request.JobGroupId)}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(res)
 	}
 }
 
-// func getJobGroups(s user.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-// 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-// 		var
-// 	}
-// }
+func getJobGroups(s user.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		var res = DefaultResponse{Status: 0, Data: s.FindAllJobGroup()}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(res)
+	}
+}
 
-// func getUser(a user.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-// 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-// 		decoder := json.NewDecoder(r.Body)
-
-// 		var newBeer adding.Beer
-// 		err := decoder.Decode(&newBeer)
-// 		if err != nil {
-// 			http.Error(w, err.Error(), http.StatusBadRequest)
-// 			return
-// 		}
-
-// 		s.AddBeer(newBeer)
-// 		// error handling omitted for simplicity
-
-// 		w.Header().Set("Content-Type", "application/json")
-// 		json.NewEncoder(w).Encode("New beer added.")
-// 	}
-// }
+func getUser(s user.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		id := strings.TrimPrefix(r.URL.Path, "/users/")
+		var res = DefaultResponse{Status: 0, Data: s.FindUserById(id)}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(res)
+	}
+}

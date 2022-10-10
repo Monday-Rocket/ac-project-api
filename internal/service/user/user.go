@@ -1,13 +1,12 @@
 package user
 
 type User struct {
-	UID      string 
+	UID      string
 	Nickname *string
 	JobGroup *JobGroup
 }
 
-
 type JobGroup struct {
-	ID   uint
-	Name string
+	ID   uint   `json:"id"`
+	Name string `json:"name"`
 }
