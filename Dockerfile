@@ -10,7 +10,7 @@ RUN go get -d -v ./...
 
 RUN go install -v ./...
 
-EXPOSE 5000
+EXPOSE 80
 
 ENV GOOGLE_APPLICATION_CREDENTIALS="./serviceAccountKey.json"
 
