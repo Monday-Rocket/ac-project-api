@@ -10,12 +10,25 @@ type UserRepository struct {
 	Db *gorm.DB
 }
 
+func (r UserRepository) FindJobGroupById(
+	Id string,
+) user.JobGroup {
+	var jobGroupRecord JobGroupRecord
+	r.Db.Where("id = ?", Id).First(&jobGroupRecord)
+	return user.JobGroup {
+		ID: jobGroupRecord.ID,
+		Name: jobGroupRecord.name,
+	}
+}
+
 func (r UserRepository) CreateUser(
 	User user.User,
 ) uint {
+	var jobGroup JobGroupRecord
+
 	var userRecord = UserRecord {
 		Nickname : User.Nickname,
-		Job : User.Job,
+		JobGroup : &jobGroup,
 		UID : User.UID,
 	}
 
@@ -26,14 +39,10 @@ func (r UserRepository) CreateUser(
 	return userRecord.ID
 }
 
-func (r UserRepository) GetUserByNickname(
-	Nickname string,
-) user.User {
-	var userRecord UserRecord
-	r.Db.Where("nickname = ?", Nickname).First(&userRecord)
-	return user.User {
-		Nickname: "",
-		UID: "",
-		Job: 3,
-	}
-}
+// func (r UserRepository) GetUserByNickname(
+// 	Nickname string,
+// ) user.User {
+// 	var userRecord UserRecord
+// 	r.Db.Where("nickname = ?", Nickname).First(&userRecord)
+// 	return nil
+// }

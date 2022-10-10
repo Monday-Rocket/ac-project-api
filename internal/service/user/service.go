@@ -24,9 +24,9 @@ type AuthHandler interface {
 }
 
 type UserRepository interface {
-	GetUserByNickname(
-		Nickname string,
-	) User
+	// GetUserByNickname(
+	// 	Nickname string,
+	// ) User
 	CreateUser(
 		User User,
 	) uint
@@ -58,12 +58,16 @@ func (s ServiceImpl) AddUser(token string) uint {
 	}
 	
 	// var userInfo = json.NewEncoder(w).Encode(parsedToken)
+	claimsMap, ok := parsedToken.Claims.(jwt.MapClaims)
+	if !ok {
+		fmt.Println("bad claims type")
+	}
+	UID := claimsMap["UID"].(string)
 
 	// authHandler로 토큰 인증 후 받은 UID DB에 저장
-	var res = s.UserRepoSet.MysqlRepo.CreateUser(User{
-		Nickname: "희진", 
-		Job: 1,
-		UID: "test",
+	return s.UserRepoSet.MysqlRepo.CreateUser(User{
+		UID: UID,
+		Nickname: nil,
+		JobGroup: nil,
 	})
-	return res
 }

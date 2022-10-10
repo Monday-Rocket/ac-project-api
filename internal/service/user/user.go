@@ -1,7 +1,13 @@
 package user
 
 type User struct {
-	Nickname string
-	Job      int
 	UID      string
+	Nickname *string
+	JobGroup *JobGroup
+}
+
+
+type JobGroup struct {
+	ID   uint
+	Name string
 }

@@ -6,12 +6,12 @@ import (
 
 type UserRecord struct {
 	gorm.Model
-	Nickname string
-	Job      int
-	UID      string
+	UID        string
+	Nickname   *string
+	JobGroup   *JobGroupRecord
 }
 
-type JobGroup struct {
+type JobGroupRecord struct {
 	gorm.Model
 	name string
 }
