@@ -12,4 +12,6 @@ RUN go install -v ./...
 
 EXPOSE 5000
 
+ENV GOOGLE_APPLICATION_CREDENTIALS="./serviceAccountKey.json"
+
 CMD [ "main" ]
