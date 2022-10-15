@@ -23,6 +23,13 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
+    - name: Reveal secrets
+      env:
+        SECRET_PWD: ${{ secrets.SECRET_PWD }}
+      run: |
+        sudo apt install git-secret                               
+        git secret reveal -p $(echo $SECRET_PWD | sed 's/./& /g')
+
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
