@@ -32,11 +32,11 @@ jobs:
       env:
         SECRETS_VERBOSE: 1
         PREFIX: "/usr/local"
-        run: |
-          git clone https://github.com/sobolevn/git-secret.git git-secret
-          cd git-secret
-          sudo make build
-          sudo make install
+      run: |
+        git clone https://github.com/sobolevn/git-secret.git git-secret
+        cd git-secret
+        sudo make build
+        sudo make install
 
     - name: Reveal secrets
       env:
