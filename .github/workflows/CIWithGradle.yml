@@ -27,6 +27,7 @@ jobs:
       uses: crazy-max/ghaction-import-gpg@v4
       with:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.SECRET_PWD }}
 
     - name: Install git-secret
       env:
@@ -40,9 +41,9 @@ jobs:
 
     - name: Reveal secrets
       env:
-        SECRET_PWD: ${{ secrets.SECRET_PWD }}
-      run: |                            
-        git secret reveal -p $(echo $SECRET_PWD | sed 's/./& /g')
+        SECRETS_VERBOSE: 1
+      run: |
+        git secret reveal 
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
