@@ -40,8 +40,8 @@ func main() {
 		fmt.Println(error)
 	}
 	router := rest.Handler(userService)
-	fmt.Println("The beer server is on tap now: http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	fmt.Println("The server is on tap now: http://localhost:"+ config.RuntimeConf.Server.Port)
+	log.Fatal(http.ListenAndServe(":" + config.RuntimeConf.Server.Port, router))
 }
 
 // main문이 실행되기전에 먼저 실행

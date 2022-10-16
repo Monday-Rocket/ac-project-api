@@ -12,6 +12,8 @@ RUN go install -v ./...
 
 EXPOSE 80
 
+ENV GO_PROFILE="prod"
+
 ENV GOOGLE_APPLICATION_CREDENTIALS="./serviceAccountKey.json"
 
 CMD [ "main" ]
