@@ -7,17 +7,25 @@
 package wired
 
 import (
+	"ac-project/api/internal/http/rest"
 	"ac-project/api/internal/service/user"
 	"github.com/google/wire"
 )
 
 // Injectors from wire.go:
 
-func InitalizeUserService() (user.Service, error) {
+func InitializeUserService() (user.Service, error) {
 	userClientSet := newClients()
 	userRepoSet := newUserRepos(userClientSet)
 	service := newService(userRepoSet)
 	return service, nil
+}
+
+func InitializeAuthMiddleware() (rest.AuthMiddleware, error) {
+	client := newFirebaseClient()
+	authHandler := newAuthHandler(client)
+	authMiddleware := newAuthMiddleware(authHandler)
+	return authMiddleware, nil
 }
 
 // wire.go:

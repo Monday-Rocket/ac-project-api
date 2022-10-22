@@ -35,13 +35,20 @@ func main() {
 	fmt.Println(app)
 
 	// set up the HTTP server
-	var userService, error = wired.InitalizeUserService()
-	if (error != nil) {
-		fmt.Println(error)
+	var userService, uError = wired.InitializeUserService()
+		if (uError != nil) {
+		fmt.Println(uError)
+	}
+	var authMiddleware, aError = wired.InitializeAuthMiddleware()
+	if (aError != nil) {
+		fmt.Println(aError)
 	}
 	router := rest.Handler(userService)
+	chain := authMiddleware.AuthUser(router)
+	// chain := router
+	http.Handle("/", chain)
 	fmt.Println("The server is on tap now: http://localhost:"+ config.RuntimeConf.Server.Port)
-	log.Fatal(http.ListenAndServe(":" + config.RuntimeConf.Server.Port, router))
+	log.Fatal(http.ListenAndServe(":" + config.RuntimeConf.Server.Port, nil))
 }
 
 // main문이 실행되기전에 먼저 실행

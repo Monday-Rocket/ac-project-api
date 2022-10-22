@@ -5,6 +5,7 @@ import (
 
 	"ac-project/api/internal/storage/mysql"
 	"ac-project/api/internal/storage/firebase"
+	"ac-project/api/internal/http/rest"
 
 	"firebase.google.com/go/auth"
 	"gorm.io/gorm"
@@ -19,6 +20,12 @@ func newRepository(
 	Db *gorm.DB,
 ) mysql.UserRepository {
 	return mysql.UserRepository{Db: Db}
+}
+
+func newAuthMiddleware(
+	authHandler *firebase.AuthHandler,
+) rest.AuthMiddleware {
+	return rest.AuthMiddleware{AuthHandler: authHandler}
 }
 
 func newAuthHandler(

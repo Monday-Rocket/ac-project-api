@@ -5,8 +5,6 @@ import (
 	"errors"
 	"fmt"
 
-	"ac-project/api/internal/storage/firebase"
-
 	jwt "github.com/golang-jwt/jwt/v4"
 )
 
@@ -22,9 +20,9 @@ type Service interface {
 type AuthHandler interface {
 	GetUIDByEmail(
 		context context.Context,
-		authHandler firebase.AuthHandler,
 		email string,
 	) string
+
 }
 
 type UserRepository interface {

@@ -12,15 +12,19 @@ type AuthHandler struct {
 }
 
 
-
 func (a AuthHandler) GetUIDByEmail(
 	context context.Context,
-	authHandler AuthHandler,
 	email string,
 ) string {
-	user, err := authHandler.AuthClient.GetUserByEmail(context, email)
+	user, err := a.AuthClient.GetUserByEmail(context, email)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return user.UID
+}
+
+func (a AuthHandler) VerifyToken(token string) (*auth.Token, error) {
+	verified, err := a.AuthClient.VerifyIDToken(nil, token)
+	return verified, err
+
 }

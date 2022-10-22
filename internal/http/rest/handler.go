@@ -23,11 +23,6 @@ func Handler(a user.Service) http.Handler {
 	return router
 }
 
-type DefaultResponse struct {
-	Status int         `json:"status"`
-	Data   interface{} `json:"data"`
-}
-
 func createUser(s user.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		var jwtToken = r.Header["X-Auth-Token"][0]
