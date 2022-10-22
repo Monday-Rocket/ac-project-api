@@ -1,12 +1,13 @@
 package mysql
 
 import (
-	"ac-project/api/internal/service/user"
 	"fmt"
 	"log"
-
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+
+	"ac-project/api/internal/service/user"
+	"ac-project/api/internal/errors"
 )
 
 type UserRepository struct {
@@ -62,10 +63,14 @@ func (r UserRepository) FindAllJobGroup() []user.JobGroup {
 	return entities
 }
 
-func (r UserRepository) FindUserById(UID string) user.User {
+func (r UserRepository) FindUserById(UID string) (user.User, error) {
 	var record UserRecord
-	r.Db.Preload("JobGroup").Where("UID = ?", UID).First(&record)
-	return toEntity(record)
+	result := r.Db.Preload("JobGroup").Where("UID = ?", UID).First(&record)
+	if (result.RowsAffected == int64(0)) {
+		return user.User{}, &errors.DataNotFoundError{}
+	}
+	fmt.Println(record.UID)
+	return toEntity(record), nil
 }
 
 func toRecord(user user.User) UserRecord {

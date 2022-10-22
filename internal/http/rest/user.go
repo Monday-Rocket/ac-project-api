@@ -1,6 +1,6 @@
 package rest
 
-type updatingUser struct {
-	nickname     string
-	job_group_id uint
+type UpdateUserRequest struct {
+	Nickname   string
+	JobGroupId uint `json:"job_group_id"`
 }

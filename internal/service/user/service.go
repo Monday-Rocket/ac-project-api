@@ -11,10 +11,10 @@ import (
 var ErrNotFound = errors.New("user not found")
 
 type Service interface {
-	AddUser(token string) string
+	AddUser(token string) CreatingUser
 	UpdateUser(token string, nickname string, jobGroupId uint) User
 	FindAllJobGroup() []JobGroup
-	FindUserById(UID string) User
+	FindUserById(UID string) (User, error)
 }
 
 type AuthHandler interface {
@@ -41,7 +41,7 @@ type UserRepository interface {
 	FindAllJobGroup() []JobGroup
 	FindUserById(
 		UID string,
-	) User
+	) (User, error)
 }
 
 type UserRepoSet struct {
@@ -53,15 +53,25 @@ type ServiceImpl struct {
 	UserRepoSet UserRepoSet
 }
 
-func (s ServiceImpl) AddUser(token string) string {
+func (s ServiceImpl) AddUser(token string) CreatingUser {
 	var UID = getUIDFromJwt(token)
-
-	// authHandler로 토큰 인증 후 받은 UID DB에 저장
-	return s.UserRepoSet.MysqlRepo.CreateUser(User{
-		UID:      UID,
-		Nickname: nil,
-		JobGroup: nil,
-	})
+	user, error := s.FindUserById(UID)
+	if (error != nil) {
+		s.UserRepoSet.MysqlRepo.CreateUser(User{
+			UID:      UID,
+			Nickname: nil,
+			JobGroup: nil,
+		})
+		return CreatingUser{
+			UID:      UID,
+			IsNew:    true,
+		}
+	} else {
+		return CreatingUser{
+			UID:      user.UID,
+			IsNew:    false,
+		}
+	}
 }
 
 func (s ServiceImpl) UpdateUser(token string, nickname string, jobGroupId uint) User {
@@ -108,6 +118,6 @@ func (s ServiceImpl) FindAllJobGroup() []JobGroup {
 
 func (s ServiceImpl) FindUserById(
 	UID string,
-) User {
+) (User, error) {
 	return s.UserRepoSet.MysqlRepo.FindUserById(UID)
 }

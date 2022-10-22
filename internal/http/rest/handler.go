@@ -16,9 +16,7 @@ func Handler(a user.Service) http.Handler {
 	router.POST("/users", createUser(a))
 	router.PATCH("/users", updateUser(a))
 	router.GET("/users/:id", getUser(a))
-
 	router.GET("/job-groups", getJobGroups(a))
-	// router.POST("/topics", getTopics(a))
 
 	return router
 }
@@ -31,11 +29,6 @@ func createUser(s user.Service) func(w http.ResponseWriter, r *http.Request, _ h
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(res)
 	}
-}
-
-type UpdateUserRequest struct {
-	Nickname   string
-	JobGroupId uint `json:"job_group_id"`
 }
 
 func updateUser(s user.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -68,7 +61,14 @@ func getJobGroups(s user.Service) func(w http.ResponseWriter, r *http.Request, _
 func getUser(s user.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		id := strings.TrimPrefix(r.URL.Path, "/users/")
-		var res = DefaultResponse{Status: 0, Data: s.FindUserById(id)}
+		user, error := s.FindUserById(id)
+		if (error != nil) {
+			var res = ErrorResponse{Status: 1000, Error: Error{Message: "회원가입을 완료하지 않은 사용자입니다."}}
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(res)
+			return;
+		}
+		var res = DefaultResponse{Status: 0, Data: user}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(res)
 	}
