@@ -23,8 +23,7 @@ func (a AuthHandler) GetUIDByEmail(
 	return user.UID
 }
 
-func (a AuthHandler) VerifyToken(token string) (*auth.Token, error) {
-	verified, err := a.AuthClient.VerifyIDToken(nil, token)
+func (a AuthHandler) VerifyToken(ctx context.Context, token string) (*auth.Token, error) {
+	verified, err := a.AuthClient.VerifyIDToken(ctx, token)
 	return verified, err
-
 }

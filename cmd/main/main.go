@@ -20,6 +20,8 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
+	
 	ex, err := os.Executable()
     if err != nil {
         panic(err)
@@ -27,7 +29,7 @@ func main() {
 	exPath := filepath.Dir(ex)
 	fmt.Println(exPath)
 	opt := option.WithCredentialsFile("./serviceAccountKey.json")
-	app, err := firebase.NewApp(context.Background(), nil, opt)
+	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
 		fmt.Errorf("error initializing app: %v", err)
 	}
