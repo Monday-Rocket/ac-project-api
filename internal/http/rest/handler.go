@@ -1,10 +1,10 @@
 package rest
 
 import (
+	"fmt"
 	"encoding/json"
 	"net/http"
 	"strings"
-
 	"ac-project/api/internal/service/user"
 
 	"github.com/julienschmidt/httprouter"
@@ -24,7 +24,7 @@ func Handler(a user.Service) http.Handler {
 func createUser(s user.Service) func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		var jwtToken = r.Header["X-Auth-Token"][0]
-
+		fmt.Println("handler-token: " + jwtToken)
 		var res = DefaultResponse{Status: 0, Data: s.AddUser(jwtToken)}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(res)

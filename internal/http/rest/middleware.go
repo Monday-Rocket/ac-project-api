@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"fmt"
 	"net/http"
 	"context"
 	"encoding/json"
@@ -14,7 +15,7 @@ type AuthMiddleware struct {
 
 func (a AuthMiddleware) AuthUser(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		
+		fmt.Println("middleware-start")
 		ctx := r.Context()
 
 		if (len(r.Header["X-Auth-Token"]) == 0) {
@@ -31,6 +32,7 @@ func (a AuthMiddleware) AuthUser(handler http.Handler) http.Handler {
 			json.NewEncoder(w).Encode(res)
 			return;
 		}
+		fmt.Println("middleware-token: " + jwtToken)
 		ctxWithValue := context.WithValue(ctx, "token", verified)
 		r = r.WithContext(ctxWithValue)
 
