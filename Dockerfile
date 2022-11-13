@@ -1,19 +1,5 @@
-# syntax=docker/dockerfile:1
-
-FROM golang:1.17-alpine
-
-WORKDIR /app
-
-COPY . .
-
-RUN go get -d -v ./...
-
-RUN go install -v ./...
-
-EXPOSE 80
-
-ENV GO_PROFILE="prod"
-
+FROM openjdk:11
+ARG JAR_FILE=build/libs/*.jar
+COPY ${JAR_FILE} app.jar
 ENV GOOGLE_APPLICATION_CREDENTIALS="./serviceAccountKey.json"
-
-CMD [ "main" ]
+ENTRYPOINT ["java", "-jar", "app.jar"]
