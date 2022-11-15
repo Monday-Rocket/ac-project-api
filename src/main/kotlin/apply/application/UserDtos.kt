@@ -18,9 +18,9 @@ data class UserResponse(
 ) {
     constructor(user: User, jobGroup: JobGroup) : this(
         user.id,
-        user.info.nickname,
+        user.info?.nickname,
         JobGroupResponse(jobGroup),
-        user.info.profileImage
+        user.info?.profileImage
     )
 }
 

@@ -1,10 +1,7 @@
 package apply.domain.user
 
 import support.domain.BaseEntity
-import javax.persistence.Embedded
-import javax.persistence.Entity
-import javax.persistence.Index
-import javax.persistence.Table
+import javax.persistence.*
 
 
 @Table(
@@ -13,8 +10,10 @@ import javax.persistence.Table
 )
 @Entity
 class User(
+    @Column(nullable = false, unique = true)
+    val uid: String,
     @Embedded
-    val info: UserInformation,
+    var info: UserInformation? = null,
     id: Long = 0L
 ) : BaseEntity(id)
 

@@ -6,14 +6,11 @@ import javax.persistence.*
 @Embeddable
 data class UserInformation(
 
-    @Column(nullable = false, unique = true)
-    val uid: String,
-
     @Column(length = 30)
-    var nickname: String? = null,
+    var nickname: String,
 
     @Column
-    var JobGroupId: Long? = null,
+    var jobGroupId: Long,
 
     @Column
     var profileImage: String? = null,

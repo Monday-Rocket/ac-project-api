@@ -16,3 +16,6 @@
 *.yaml
 
 serviceAccountKey.json
+
+build
+.gradle

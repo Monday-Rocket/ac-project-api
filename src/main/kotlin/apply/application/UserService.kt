@@ -16,33 +16,39 @@ class UserService(
 ) {
 
     fun getByUid(uid: String): User {
-        return userRepository.findByInfoUid(uid) ?: throw IllegalArgumentException("회원이 존재하지 않습니다. uid: $uid")
+        return userRepository.findByUid(uid) ?: throw IllegalArgumentException("회원이 존재하지 않습니다. uid: $uid")
     }
 
     fun createUser(uid: String): CreateUserResponse {
-        userRepository.findByInfoUid(uid) ?.let {
-            return CreateUserResponse(id = it.id, is_new = false)
+        userRepository.findByUid(uid) ?.let {
+            if (it.info != null) {
+                return CreateUserResponse(id = it.id, is_new = false)
+            } else {
+                return CreateUserResponse(id = it.id, is_new = true)
+            }
         }
-        userRepository.save(User(UserInformation(uid))).let {
+        userRepository.save(User(uid)).let {
             return CreateUserResponse(id = it.id, is_new = true)
         }
     }
 
     fun updateUserInfo(uid: String, updateUserRequest: UpdateUserRequest): UserResponse {
-        userRepository.findByInfoUid(uid) ?.let {
-            it.info.nickname = updateUserRequest.nickname
-            it.info.JobGroupId = updateUserRequest.job_group_id
-            it.info.profileImage = updateUserRequest.profile_img
+        userRepository.findByUid(uid) ?.let {
+            it.info = UserInformation(
+                nickname = updateUserRequest.nickname,
+                jobGroupId = updateUserRequest.job_group_id,
+                profileImage = updateUserRequest.profile_img
+            )
             return UserResponse(it, jobGroupService.getJobGroupById(updateUserRequest.job_group_id))
         } ?: throw IllegalArgumentException("회원이 존재하지 않습니다. uid: $uid")
     }
 
     fun getInformation(uid: String): UserResponse {
-        return userRepository.findByInfoUid(uid) ?.let {
+        return userRepository.findByUid(uid) ?.let {
             return UserResponse(
                 it,
                 jobGroupService.getJobGroupById(
-                    it.info.JobGroupId ?: throw CustomException(ResponseCode.NOT_SIGNED_UP)
+                    it.info?.jobGroupId ?: throw CustomException(ResponseCode.NOT_SIGNED_UP)
                 )
             )
         } ?: throw IllegalArgumentException("회원이 존재하지 않습니다. uid: $uid")
