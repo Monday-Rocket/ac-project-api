@@ -14,9 +14,7 @@ class Cheater(
     @Column(nullable = false)
     @Lob
     val description: String = "",
-
-    @Column(nullable = false)
-    val createdDateTime: LocalDateTime = LocalDateTime.now(),
+    createdDateTime: LocalDateTime = LocalDateTime.now(),
 
     id: Long = 0L
-) : BaseEntity(id)
+) : BaseEntity(id, createdDateTime)

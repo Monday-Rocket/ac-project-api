@@ -18,6 +18,6 @@ data class ApiResponse<T>(
         fun error(message: String?): ApiResponse<Unit> =
             ApiResponse(message = message)
 
-        fun <T> success(data: T?): ApiResponse<T> = ApiResponse(data = data)
+        fun <T> success(data: T? = null): ApiResponse<T> = ApiResponse(data = data)
     }
 }

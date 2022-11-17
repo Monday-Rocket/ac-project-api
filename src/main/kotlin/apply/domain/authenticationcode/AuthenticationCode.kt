@@ -18,9 +18,8 @@ class AuthenticationCode(
     @Column(nullable = false)
     var authenticated: Boolean = false,
 
-    @Column(nullable = false)
-    val createdDateTime: LocalDateTime = LocalDateTime.now()
-) : BaseEntity() {
+    createdDateTime: LocalDateTime = LocalDateTime.now()
+) : BaseEntity(0, createdDateTime) {
     private val expiryDateTime: LocalDateTime
         get() = createdDateTime + EXPIRY_MINUTE_TIME
 
