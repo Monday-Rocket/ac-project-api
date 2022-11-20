@@ -15,7 +15,7 @@ enum class ResponseCode(
 
     DUPLICATE_FOLDER_NAME(2000, "이미 등록된 폴더명입니다.", HttpStatus.BAD_REQUEST),
 
-    DUPLICATE_LINK_URL(2001, "이미 등록된 url입니다.", HttpStatus.BAD_REQUEST),
+    DUPLICATE_LINK_URL(3000, "이미 등록된 url입니다.", HttpStatus.BAD_REQUEST),
 
     HTTPS_MESSAGE_NOT_READABLE(9990, "메시지를 읽을 수 없습니다.", HttpStatus.BAD_REQUEST),
     METHOD_ARGUMENT_NOT_VALID(9991, "잘못된 메시지 형식입니다.", HttpStatus.BAD_REQUEST),
