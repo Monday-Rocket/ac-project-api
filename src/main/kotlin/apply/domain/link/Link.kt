@@ -16,22 +16,26 @@ class Link(
     val userId: Long,
 
     @Column
-    val folderId: Long? = null,
+    var folderId: Long? = null,
 
-    @Column(nullable = false)
-    val url: String,
-
-    @Column
-    val title: String? = null,
+    @Column(nullable = false, unique = true)
+    var url: String,
 
     @Column
-    val image: String? = null,
+    var title: String? = null,
 
     @Column
-    val describe: String? = null,
+    var image: String? = null,
+
+    @Column
+    var describe: String? = null,
     createdDateTime: LocalDateTime = LocalDateTime.now(),
     id: Long = 0L
 ) : BaseEntity(id, createdDateTime) {
     @Column(nullable = false)
     private var deleted: Boolean = false
+
+    fun delete() {
+        deleted = true
+    }
 }

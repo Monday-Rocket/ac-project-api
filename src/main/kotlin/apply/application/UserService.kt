@@ -16,7 +16,10 @@ class UserService(
 ) {
 
     fun getByUid(uid: String): User {
-        return userRepository.findByUid(uid) ?: throw IllegalArgumentException("회원이 존재하지 않습니다. uid: $uid")
+        val user = userRepository.findByUid(uid)
+            ?: throw IllegalArgumentException("회원이 존재하지 않습니다. uid: $uid")
+        if (!user.checkSignedUp()) throw CustomException(ResponseCode.NOT_SIGNED_UP)
+        return user;
     }
 
     fun createUser(uid: String): CreateUserResponse {

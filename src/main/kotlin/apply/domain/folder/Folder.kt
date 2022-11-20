@@ -19,18 +19,20 @@ class Folder(
     @Column(nullable = false)
     var name: String,
 
+    @Column(nullable = false)
+    var visible: Boolean = false,
+
     @Embedded
     var thumbnail: Thumbnail? = null,
-
-    visible: Boolean = false,
     id: Long = 0L,
     createdDateTime: LocalDateTime = LocalDateTime.now(),
 ) : BaseEntity(id, createdDateTime) {
-    @Column(nullable = false)
-    var visible: Boolean = visible
-        private set
 
     @Column(nullable = false)
     private var deleted: Boolean = false
+
+    fun delete() {
+        deleted = true
+    }
 
 }

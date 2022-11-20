@@ -1,11 +1,8 @@
 package apply.ui.api
 
-import apply.domain.applicationform.DuplicateApplicationException
 import apply.domain.user.UnidentifiedUserException
 import apply.exception.CustomException
 import apply.security.LoginFailedException
-import com.fasterxml.jackson.databind.exc.InvalidFormatException
-import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -80,14 +77,6 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(ApiResponse.error(exception.message))
     }
-
-    @ExceptionHandler(DuplicateApplicationException::class)
-    fun handleConflictException(exception: DuplicateApplicationException): ResponseEntity<ApiResponse<Unit>> {
-        logger.error("message", exception)
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-            .body(ApiResponse.error(exception.message))
-    }
-
     @ExceptionHandler(ExceededRequestException::class)
     fun handleExceedRateLimitException(exception: ExceededRequestException): ResponseEntity<ApiResponse<Unit>> {
         logger.error("message", exception)

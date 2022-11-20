@@ -1,8 +1,6 @@
 package apply.application
 
-import apply.domain.applicationform.ApplicationForm
 import apply.domain.jobgroup.JobGroup
-import apply.domain.user.Gender
 import apply.domain.user.Password
 import apply.domain.user.User
 import java.time.LocalDate

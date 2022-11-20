@@ -2,8 +2,6 @@ package apply.ui.api
 
 import apply.application.JobGroupResponse
 import apply.application.JobGroupService
-import apply.application.UserResponse
-import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

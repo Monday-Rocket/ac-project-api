@@ -15,5 +15,10 @@ class User(
     @Embedded
     var info: UserInformation? = null,
     id: Long = 0L
-) : BaseEntity(id)
+) : BaseEntity(id) {
+
+    fun checkSignedUp(): Boolean {
+        return info != null
+    }
+}
 
