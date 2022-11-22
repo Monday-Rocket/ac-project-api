@@ -29,8 +29,8 @@ data class CreateUserResponse(
 )
 
 data class UpdateUserRequest(
-    val nickname: String,
-    val job_group_id: Long,
+    val nickname: String?,
+    val job_group_id: Long?,
     val profile_img: String?
 )
 

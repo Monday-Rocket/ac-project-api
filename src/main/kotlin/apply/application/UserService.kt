@@ -37,12 +37,19 @@ class UserService(
 
     fun updateUserInfo(uid: String, updateUserRequest: UpdateUserRequest): UserResponse {
         userRepository.findByUid(uid) ?.let {
-            it.info = UserInformation(
-                nickname = updateUserRequest.nickname,
-                jobGroupId = updateUserRequest.job_group_id,
-                profileImage = updateUserRequest.profile_img
-            )
-            return UserResponse(it, jobGroupService.getJobGroupById(updateUserRequest.job_group_id))
+            it.info ?.let { info ->
+                info.nickname = updateUserRequest.nickname ?: info.nickname
+                info.jobGroupId = updateUserRequest.job_group_id ?: info.jobGroupId
+                info.profileImage = updateUserRequest.profile_img ?: info.profileImage
+                return UserResponse(it, jobGroupService.getJobGroupById(info.jobGroupId))
+            } ?.run {
+                it.info = UserInformation(
+                    nickname = updateUserRequest.nickname ?: throw CustomException(ResponseCode.NOT_ENOUGH_FOR_SIGNING_UP),
+                    jobGroupId = updateUserRequest.job_group_id ?: throw CustomException(ResponseCode.NOT_ENOUGH_FOR_SIGNING_UP),
+                    profileImage = updateUserRequest.profile_img ?: throw CustomException(ResponseCode.NOT_ENOUGH_FOR_SIGNING_UP)
+                )
+                return UserResponse(it, jobGroupService.getJobGroupById(updateUserRequest.job_group_id))
+            }
         } ?: throw IllegalArgumentException("회원이 존재하지 않습니다. uid: $uid")
     }
 
