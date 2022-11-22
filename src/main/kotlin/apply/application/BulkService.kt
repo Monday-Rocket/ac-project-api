@@ -26,6 +26,5 @@ class BulkService(
                 created_date_time = it.created_date_time
             )
         })
-//        folderService.updateThumbnail(folders)
     }
 }

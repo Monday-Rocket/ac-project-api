@@ -1,6 +1,6 @@
 package apply.application
 
-import org.apache.poi.hpsf.Thumbnail
+import apply.domain.folder.Thumbnail
 import java.time.LocalDateTime
 
 

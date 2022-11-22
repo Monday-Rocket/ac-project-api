@@ -42,7 +42,7 @@ class UserService(
                 info.jobGroupId = updateUserRequest.job_group_id ?: info.jobGroupId
                 info.profileImage = updateUserRequest.profile_img ?: info.profileImage
                 return UserResponse(it, jobGroupService.getJobGroupById(info.jobGroupId))
-            } ?.run {
+            } ?: run {
                 it.info = UserInformation(
                     nickname = updateUserRequest.nickname ?: throw CustomException(ResponseCode.NOT_ENOUGH_FOR_SIGNING_UP),
                     jobGroupId = updateUserRequest.job_group_id ?: throw CustomException(ResponseCode.NOT_ENOUGH_FOR_SIGNING_UP),

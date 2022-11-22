@@ -1,6 +1,5 @@
 package apply.domain.folder
 
-import org.apache.poi.hpsf.Thumbnail
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import support.domain.BaseEntity

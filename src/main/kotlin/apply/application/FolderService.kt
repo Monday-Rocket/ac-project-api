@@ -1,16 +1,16 @@
 package apply.application
 
-import apply.domain.folder.Folder
-import apply.domain.folder.FolderRepository
-import apply.domain.folder.getById
+import apply.domain.folder.*
 import apply.domain.user.User
 import apply.exception.CustomException
 import apply.ui.api.ResponseCode
 import org.springframework.data.domain.PageRequest
-
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.event.TransactionPhase
+import org.springframework.transaction.event.TransactionalEventListener
 import java.time.LocalDateTime
+
 
 @Transactional
 @Service
@@ -53,10 +53,6 @@ class FolderService(
 
     fun findAllByUserIdAndName(userId: Long, names: List<String>): List<Folder> {
         return folderRepository.findAllByUserIdAndNameIn(userId, names)
-    }
-
-    fun updateThumbnail(folders: List<Folder>) {
-
     }
 
     fun update(uid: String, folderId: Long, request: UpdateFolderRequest) {
@@ -108,6 +104,19 @@ class FolderService(
         val folder = folderRepository.getById(folderId)
         if (folder.userId != user.id) throw CustomException(ResponseCode.NOT_AUTHORIZED_FOR_THE_DATA)
         return linkService.getByFolderId(folderId, pageRequest)
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    fun updateThumbnail(event: FolderLinkUpdatedEvent) {
+        val folder = folderRepository.getById(event.folderId)
+        event.thumbnail ?.let {
+            folder.thumbnail = Thumbnail(it)
+        } ?: run {
+            linkService.getCurrentLinkByFolderId(event.folderId)?.image ?. let {
+                folder.thumbnail = Thumbnail(it)
+            }
+        }
+
     }
 
 //    private fun findRecruitmentItemsToDelete(recruitmentId: Long, excludedItemIds: List<Long>): List<RecruitmentItem> {

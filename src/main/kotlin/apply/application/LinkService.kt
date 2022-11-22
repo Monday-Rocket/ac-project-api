@@ -1,11 +1,13 @@
 package apply.application
 
+import apply.domain.folder.FolderLinkUpdatedEvent
 import apply.domain.link.Link
 import apply.domain.link.LinkRepository
 import apply.domain.link.getById
 import apply.domain.user.User
 import apply.exception.CustomException
 import apply.ui.api.ResponseCode
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -15,10 +17,11 @@ import java.time.LocalDateTime
 @Service
 class LinkService(
     private val userService: UserService,
-    private val linkRepository: LinkRepository
-    ) {
+    private val linkRepository: LinkRepository,
+    private val applicationEventPublisher: ApplicationEventPublisher
+) {
     fun createBulk(user: User, request: List<SaveLinkRequest>) {
-        linkRepository.saveAll(request.map {
+        val links = linkRepository.saveAll(request.map {
             Link(
                 userId = user.id,
                 url = it.url,
@@ -29,6 +32,15 @@ class LinkService(
                 createdDateTime = it.created_date_time ?: LocalDateTime.now()
             )
         })
+        val folderIdSet = mutableSetOf<Long>()
+        links.forEach {
+            it.folderId ?.let  { folderId ->
+                folderIdSet.add(folderId)
+            }
+        }
+        folderIdSet.forEach {
+            applicationEventPublisher.publishEvent(FolderLinkUpdatedEvent(it))
+        }
     }
 
     fun countByFolderId(folderId: Long)
@@ -87,7 +99,7 @@ class LinkService(
         if (linkRepository.existsByUserIdAndUrl(user.id, request.url)) {
             throw CustomException(ResponseCode.DUPLICATE_LINK_URL)
         }
-        linkRepository.save(
+        val link = linkRepository.save(
             Link(
                 userId = user.id,
                 url = request.url,
@@ -98,6 +110,9 @@ class LinkService(
                 createdDateTime = request.created_date_time ?: LocalDateTime.now()
             )
         )
+        link.folderId ?.let {
+            applicationEventPublisher.publishEvent(FolderLinkUpdatedEvent(it, link.image))
+        }
     }
 
     fun update(uid: String, linkId: Long, request: UpdateLinkRequest) {
@@ -150,4 +165,7 @@ class LinkService(
             )
         }
     }
+
+    fun getCurrentLinkByFolderId(folderId: Long): Link?
+      = linkRepository.findFirst1ByFolderIdOrderByCreatedDateTime(folderId)
 }
