@@ -90,7 +90,7 @@ class FolderService(
             response.add(GetByUserIdResponse(
                 id = it.id,
                 name = it.name,
-                thumbnail = it.thumbnail,
+                thumbnail = it.thumbnail?.image,
                 visible = it.visible,
                 links = linkService.countByFolderId(it.id),
                 created_date_time = it.createdDateTime

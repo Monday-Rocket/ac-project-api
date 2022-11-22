@@ -18,7 +18,7 @@ data class UpdateFolderRequest(
 data class GetByUserIdResponse(
     val id: Long? = null,
     val name: String,
-    val thumbnail: Thumbnail? = null,
+    val thumbnail: String? = null,
     val visible: Boolean? = false,
     val links: Int,
     val created_date_time: LocalDateTime? = null,
