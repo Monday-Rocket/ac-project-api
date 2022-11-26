@@ -54,7 +54,7 @@ class UserService(
         } ?: throw IllegalArgumentException("회원이 존재하지 않습니다. uid: $uid")
     }
 
-    fun getInformation(uid: String): UserResponse {
+    fun getInformationByUid(uid: String): UserResponse {
         return userRepository.findByUid(uid) ?.let {
             return UserResponse(
                 it,
@@ -71,5 +71,16 @@ class UserService(
 
     fun getById(id: Long): User {
         return userRepository.getById(id)
+    }
+
+    fun getInformationById(userId: Long): UserResponse? {
+        return userRepository.getById(userId).let {
+            return UserResponse(
+                it,
+                jobGroupService.getById(
+                    it.info?.jobGroupId ?: throw CustomException(ResponseCode.NOT_SIGNED_UP)
+                )
+            )
+        }
     }
 }
