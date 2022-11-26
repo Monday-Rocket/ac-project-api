@@ -19,4 +19,6 @@ interface LinkRepository : JpaRepository<Link, Long> {
     fun findPageByUserIdOrderByCreatedDateTimeDesc(id: Long, pageable: Pageable): Page<Link>
     fun findPageByUserIdInOrderByCreatedDateTimeDesc(userIds: List<Long>, pageable: Pageable): Page<Link>
     fun findFirst1ByFolderIdOrderByCreatedDateTime(folderId: Long): Link?
+    fun findPageByUserIdAndTitleContains(userId: Long, title: String, pageable: Pageable): Page<Link>
+    fun findPageByTitleContains(keyword: String, pageable: Pageable): Page<Link>
 }

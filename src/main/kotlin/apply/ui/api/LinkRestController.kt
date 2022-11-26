@@ -57,4 +57,15 @@ class LinkRestController(
     ): ResponseEntity<ApiResponse<Page<LinkResponse>>> {
         return ResponseEntity.ok(ApiResponse.success(linkService.getUnclassifiedLinks(uid, PageRequest.of(pageNo, pageSize))))
     }
+
+    @GetMapping("/search")
+    fun searchLinkByKeyword(
+        @RequestParam(value = "my_links_only", required = true) myLinksOnly: Boolean,
+        @RequestParam(value = "keyword", required = true) keyword: String,
+        @RequestParam(value = "page_no", defaultValue = "0") pageNo: Int,
+        @RequestParam(value = "page_size", defaultValue = "10") pageSize: Int,
+        @LoginUser uid: String
+    ): ResponseEntity<ApiResponse<Page<LinkWithUserResponse>>> {
+        return ResponseEntity.ok(ApiResponse.success(linkService.searchByKeyword(myLinksOnly, uid, keyword, PageRequest.of(pageNo, pageSize))))
+    }
 }

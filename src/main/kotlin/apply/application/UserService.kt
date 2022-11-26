@@ -3,6 +3,7 @@ package apply.application
 import apply.domain.user.User
 import apply.domain.user.UserInformation
 import apply.domain.user.UserRepository
+import apply.domain.user.getById
 import apply.exception.CustomException
 import apply.ui.api.ResponseCode
 import org.springframework.stereotype.Service
@@ -66,5 +67,9 @@ class UserService(
 
     fun getByJobGroupId(jobGroupId: Long): List<User> {
         return userRepository.findAllByInfoJobGroupId(jobGroupId)
+    }
+
+    fun getById(id: Long): User {
+        return userRepository.getById(id)
     }
 }

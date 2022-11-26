@@ -198,4 +198,40 @@ class LinkService(
             )
         }
     }
+
+    fun searchByKeyword(myLinksOnly: Boolean, uid: String, keyword: String, pageRequest: PageRequest): Page<LinkWithUserResponse> {
+        if (myLinksOnly) {
+            val me = userService.getByUid(uid)
+            val job = jobGroupService.getById(me.info!!.jobGroupId)
+            return linkRepository.findPageByUserIdAndTitleContains(me.id, keyword, pageRequest).let {
+                Page(
+                    page_no = it.number,
+                    page_size = it.size,
+                    total_count = it.totalElements,
+                    total_page = it.totalPages,
+                    contents = it.content.map { link ->
+                        LinkWithUserResponse(
+                            me, job, link
+                        )
+                    }
+                )
+            }
+        } else {
+            return linkRepository.findPageByTitleContains(keyword, pageRequest).let {
+                Page(
+                    page_no = it.number,
+                    page_size = it.size,
+                    total_count = it.totalElements,
+                    total_page = it.totalPages,
+                    contents = it.content.map { link ->
+                        val user = userService.getById(link.userId)
+                        val job = jobGroupService.getById(user.info!!.jobGroupId)
+                        LinkWithUserResponse(
+                            user, job, link
+                        )
+                    }
+                )
+            }
+        }
+    }
 }
