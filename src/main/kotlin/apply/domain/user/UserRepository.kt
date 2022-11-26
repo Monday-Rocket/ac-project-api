@@ -11,4 +11,6 @@ fun UserRepository.getById(id: Long): User = findByIdOrNull(id)
 
 interface UserRepository : JpaRepository<User, Long> {
     fun findByUid(uid: String): User?
+
+    fun findAllByInfoJobGroupId(jobGroupId: Long): List<User>
 }

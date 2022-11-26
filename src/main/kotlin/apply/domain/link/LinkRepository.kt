@@ -17,5 +17,6 @@ interface LinkRepository : JpaRepository<Link, Long> {
     fun findPageByUserIdAndFolderIdIsNullOrderByCreatedDateTimeDesc(userId: Long, pageable: Pageable): Page<Link>
     fun existsByUserIdAndUrl(userId: Long, url: String): Boolean
     fun findPageByUserIdOrderByCreatedDateTimeDesc(id: Long, pageable: Pageable): Page<Link>
+    fun findPageByUserIdInOrderByCreatedDateTimeDesc(userIds: List<Long>, pageable: Pageable): Page<Link>
     fun findFirst1ByFolderIdOrderByCreatedDateTime(folderId: Long): Link?
 }

@@ -1,6 +1,7 @@
 package apply.application
 
 import apply.domain.folder.FolderLinkUpdatedEvent
+import apply.domain.jobgroup.getById
 import apply.domain.link.Link
 import apply.domain.link.LinkRepository
 import apply.domain.link.getById
@@ -17,6 +18,7 @@ import java.time.LocalDateTime
 @Service
 class LinkService(
     private val userService: UserService,
+    private val jobGroupService: JobGroupService,
     private val linkRepository: LinkRepository,
     private val applicationEventPublisher: ApplicationEventPublisher
 ) {
@@ -54,7 +56,7 @@ class LinkService(
             Page(
                 page_no = it.number,
                 page_size = it.size,
-                total_count = it.numberOfElements,
+                total_count = it.totalElements,
                 total_page = it.totalPages,
                 contents = it.content.map { link ->
                     LinkResponse(
@@ -77,7 +79,7 @@ class LinkService(
             Page(
                 page_no = it.number,
                 page_size = it.size,
-                total_count = it.numberOfElements,
+                total_count = it.totalElements,
                 total_page = it.totalPages,
                 contents = it.content.map { link ->
                     LinkResponse(
@@ -149,7 +151,7 @@ class LinkService(
             Page(
                 page_no = it.number,
                 page_size = it.size,
-                total_count = it.numberOfElements,
+                total_count = it.totalElements,
                 total_page = it.totalPages,
                 contents = it.content.map { link ->
                     LinkResponse(
@@ -168,4 +170,32 @@ class LinkService(
 
     fun getCurrentLinkByFolderId(folderId: Long): Link?
       = linkRepository.findFirst1ByFolderIdOrderByCreatedDateTime(folderId)
+
+    fun getPageByUserId(users: List<User>, pageRequest: PageRequest): Page<Link> {
+        return linkRepository.findPageByUserIdInOrderByCreatedDateTimeDesc(users.map { it.id }, pageRequest).let {
+            Page(
+                page_no = it.number,
+                page_size = it.size,
+                total_count = it.totalElements,
+                total_page = it.totalPages,
+                contents = it.content
+            )
+        }
+    }
+
+    fun getLinksByJobGroupId(id: Long, pageRequest: PageRequest): Page<LinkWithUserResponse> {
+        val job = jobGroupService.getById(id)
+        val users = userService.getByJobGroupId(job.id)
+        return getPageByUserId(users, pageRequest).let {
+            Page(
+                page_no = it.page_no,
+                page_size = it.page_size,
+                total_count = it.total_count,
+                total_page = it.total_page,
+                contents = it.contents.map { link ->
+                    LinkWithUserResponse(users.find { user -> user.id == link.userId }!!, job, link)
+                }
+            )
+        }
+    }
 }

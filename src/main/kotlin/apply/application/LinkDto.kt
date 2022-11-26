@@ -1,5 +1,8 @@
 package apply.application
 
+import apply.domain.jobgroup.JobGroup
+import apply.domain.link.Link
+import apply.domain.user.User
 import java.time.LocalDateTime
 
 data class SaveLinkWithFolderNameRequest(
@@ -38,3 +41,25 @@ data class LinkResponse(
     val describe: String? = null,
     val created_date_time: LocalDateTime,
 )
+
+data class LinkWithUserResponse(
+    val id: Long,
+    val user: UserResponse,
+    val url: String,
+    val title: String? = null,
+    val image: String? = null,
+    val folder_id: Long? = null,
+    val describe: String? = null,
+    val created_date_time: LocalDateTime,
+) {
+    constructor(user: User, jobGroup: JobGroup, link: Link) : this(
+        link.id,
+        UserResponse(user, jobGroup),
+        link.url,
+        link.title,
+        link.image,
+        link.folderId,
+        link.describe,
+        link.createdDateTime
+    )
+}

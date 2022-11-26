@@ -41,14 +41,14 @@ class UserService(
                 info.nickname = updateUserRequest.nickname ?: info.nickname
                 info.jobGroupId = updateUserRequest.job_group_id ?: info.jobGroupId
                 info.profileImage = updateUserRequest.profile_img ?: info.profileImage
-                return UserResponse(it, jobGroupService.getJobGroupById(info.jobGroupId))
+                return UserResponse(it, jobGroupService.getById(info.jobGroupId))
             } ?: run {
                 it.info = UserInformation(
                     nickname = updateUserRequest.nickname ?: throw CustomException(ResponseCode.NOT_ENOUGH_FOR_SIGNING_UP),
                     jobGroupId = updateUserRequest.job_group_id ?: throw CustomException(ResponseCode.NOT_ENOUGH_FOR_SIGNING_UP),
                     profileImage = updateUserRequest.profile_img ?: throw CustomException(ResponseCode.NOT_ENOUGH_FOR_SIGNING_UP)
                 )
-                return UserResponse(it, jobGroupService.getJobGroupById(updateUserRequest.job_group_id))
+                return UserResponse(it, jobGroupService.getById(updateUserRequest.job_group_id))
             }
         } ?: throw IllegalArgumentException("회원이 존재하지 않습니다. uid: $uid")
     }
@@ -57,10 +57,14 @@ class UserService(
         return userRepository.findByUid(uid) ?.let {
             return UserResponse(
                 it,
-                jobGroupService.getJobGroupById(
+                jobGroupService.getById(
                     it.info?.jobGroupId ?: throw CustomException(ResponseCode.NOT_SIGNED_UP)
                 )
             )
         } ?: throw IllegalArgumentException("회원이 존재하지 않습니다. uid: $uid")
+    }
+
+    fun getByJobGroupId(jobGroupId: Long): List<User> {
+        return userRepository.findAllByInfoJobGroupId(jobGroupId)
     }
 }
