@@ -74,8 +74,7 @@ class FolderService(
         folder.delete()
     }
 
-    // 성능 개선 여지
-    fun getByUserId(uid: String): List<GetByUserIdResponse> {
+    fun getByUserUid(uid: String): List<GetByUserIdResponse> {
         val user = userService.getByUid(uid)
         val folders = folderRepository.findAllByUserIdOrderByCreatedDateTime(user.id)
         val response = mutableListOf<GetByUserIdResponse>()
@@ -99,10 +98,25 @@ class FolderService(
         return response
     }
 
+    fun getByUserId(id: Long): List<GetByUserIdResponse> {
+        val user = userService.getById(id)
+        return folderRepository.findVisibleByUserIdOrderByCreatedDateTime(user.id).map {
+            GetByUserIdResponse(
+                id = it.id,
+                name = it.name,
+                thumbnail = it.thumbnail?.image,
+                visible = it.visible,
+                links = linkService.countByFolderId(it.id),
+                created_date_time = it.createdDateTime
+            )
+        }
+    }
+
     fun getLinksByFolderId(uid: String, folderId: Long, pageRequest: PageRequest): Page<LinkResponse> {
         val user = userService.getByUid(uid)
         val folder = folderRepository.getById(folderId)
-        if (folder.userId != user.id) throw CustomException(ResponseCode.NOT_AUTHORIZED_FOR_THE_DATA)
+        if (folder.userId != user.id && !folder.visible)
+            throw CustomException(ResponseCode.NOT_AUTHORIZED_FOR_THE_DATA)
         return linkService.getByFolderId(folderId, pageRequest)
     }
 

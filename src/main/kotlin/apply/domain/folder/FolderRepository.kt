@@ -10,6 +10,13 @@ fun FolderRepository.getById(id: Long): Folder = findByIdOrNull(id)
 
 interface FolderRepository : JpaRepository<Folder, Long> {
     fun findAllByVisibleFalse(): List<Folder>
+
+    @Query("""
+        SELECT f FROM Folder f 
+        WHERE f.userId = :userId 
+        AND f.visible = true
+    """)
+    fun findVisibleByUserIdOrderByCreatedDateTime(@Param("userId") userId: Long): List<Folder>
     fun findAllByUserIdOrderByCreatedDateTime(userId: Long): List<Folder>
     @Query("SELECT f FROM Folder f WHERE f.userId = :userId AND name in :names")
     fun findAllByUserIdAndNameIn(@Param("userId") userId: Long, @Param("names") names: List<String>): List<Folder>

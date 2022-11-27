@@ -172,7 +172,7 @@ class LinkService(
       = linkRepository.findFirst1ByFolderIdOrderByCreatedDateTime(folderId)
 
     fun getPageByUserId(users: List<User>, pageRequest: PageRequest): Page<Link> {
-        return linkRepository.findPageByUserIdInOrderByCreatedDateTimeDesc(users.map { it.id }, pageRequest).let {
+        return linkRepository.findVisiblePageByUserIdIn(users.map { it.id }, pageRequest).let {
             Page(
                 page_no = it.number,
                 page_size = it.size,

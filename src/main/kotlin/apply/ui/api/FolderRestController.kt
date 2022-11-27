@@ -53,7 +53,7 @@ class FolderRestController(
     fun getByUserId(
         @LoginUser uid: String
     ): ResponseEntity<ApiResponse<List<GetByUserIdResponse>>> {
-        return ResponseEntity.ok(ApiResponse.success(folderService.getByUserId(uid)))
+        return ResponseEntity.ok(ApiResponse.success(folderService.getByUserUid(uid)))
     }
 
     @GetMapping("/{folderId}/links")

@@ -1,23 +1,16 @@
 package apply.ui.api
 
 import apply.application.*
-import apply.domain.user.User
 import apply.security.LoginUser
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
+import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/users")
 @RestController
 class UserRestController(
     private val userService: UserService,
+    private val folderService: FolderService
 ) {
 
     @PostMapping
@@ -48,4 +41,10 @@ class UserRestController(
         return ResponseEntity.ok(ApiResponse.success(userService.getInformationById(userId)))
     }
 
+    @GetMapping("/{userId}/folders")
+    fun getFoldersByUserId(
+        @PathVariable("userId") userId: Long,
+    ): ResponseEntity<ApiResponse<List<GetByUserIdResponse>>> {
+        return ResponseEntity.ok(ApiResponse.success(folderService.getByUserId(userId)))
+    }
 }

@@ -27,7 +27,7 @@ class Link(
     @Column
     var image: String? = null,
 
-    @Column
+    @Column(length = 550)
     var describe: String? = null,
     createdDateTime: LocalDateTime = LocalDateTime.now(),
     id: Long = 0L
