@@ -1,11 +1,10 @@
 package apply.application
 
-import apply.domain.user.User
-import apply.domain.user.UserInformation
-import apply.domain.user.UserRepository
-import apply.domain.user.getById
+import apply.domain.folder.FolderLinkUpdatedEvent
+import apply.domain.user.*
 import apply.exception.CustomException
 import apply.ui.api.ResponseCode
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -13,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    private val jobGroupService: JobGroupService
+    private val jobGroupService: JobGroupService,
+    private val applicationEventPublisher: ApplicationEventPublisher
 ) {
 
     fun getByUid(uid: String): User {
@@ -31,6 +31,11 @@ class UserService(
                 return CreateUserResponse(id = it.id, is_new = true)
             }
         }
+        userRepository.findSignedOutUserByUid(uid) ?. let {
+            it!!.activate()
+            return CreateUserResponse(id = it.id, is_new = true)
+        }
+
         userRepository.save(User(uid)).let {
             return CreateUserResponse(id = it.id, is_new = true)
         }
@@ -82,5 +87,11 @@ class UserService(
                 )
             )
         }
+    }
+
+    fun signOut(uid: String) {
+        val user = getByUid(uid)
+        applicationEventPublisher.publishEvent(UserSignedOutEvent(user.id))
+        user.delete()
     }
 }

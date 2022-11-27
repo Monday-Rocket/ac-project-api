@@ -1,6 +1,7 @@
 package apply.domain.user
 
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.findByIdOrNull
 
 fun UserRepository.getByUid(uid: String): User = findByUid(uid)
@@ -13,4 +14,10 @@ interface UserRepository : JpaRepository<User, Long> {
     fun findByUid(uid: String): User?
 
     fun findAllByInfoJobGroupId(jobGroupId: Long): List<User>
+    @Query("""
+        SELECT * FROM user
+            WHERE deleted = true
+            AND uid = :uid
+    """, nativeQuery = true)
+    fun findSignedOutUserByUid(uid: String): User?
 }

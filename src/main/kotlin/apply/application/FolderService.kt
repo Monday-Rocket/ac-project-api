@@ -2,6 +2,7 @@ package apply.application
 
 import apply.domain.folder.*
 import apply.domain.user.User
+import apply.domain.user.UserSignedOutEvent
 import apply.exception.CustomException
 import apply.ui.api.ResponseCode
 import org.springframework.data.domain.PageRequest
@@ -74,6 +75,11 @@ class FolderService(
         folder.delete()
     }
 
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    fun deleteSignedOutUsersFolders(event: UserSignedOutEvent) {
+        folderRepository.deleteBatch(event.userId)
+    }
+
     fun getByUserUid(uid: String): List<GetByUserIdResponse> {
         val user = userService.getByUid(uid)
         val folders = folderRepository.findAllByUserIdOrderByCreatedDateTime(user.id)
@@ -130,7 +136,6 @@ class FolderService(
                 folder.thumbnail = Thumbnail(it)
             }
         }
-
     }
 
 //    private fun findRecruitmentItemsToDelete(recruitmentId: Long, excludedItemIds: List<Long>): List<RecruitmentItem> {

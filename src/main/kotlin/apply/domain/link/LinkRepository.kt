@@ -3,6 +3,7 @@ package apply.domain.link
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.data.repository.query.Param
@@ -38,4 +39,8 @@ interface LinkRepository : JpaRepository<Link, Long> {
             ORDER BY l.createdDateTime DESC
     """)
     fun findPageByTitleContains(@Param("keyword") keyword: String, pageable: Pageable): Page<Link>
+
+    @Modifying
+    @Query("UPDATE Link l SET l.deleted = true WHERE l.userId = :userId")
+    fun deleteBatch(@Param("userId") userId: Long)
 }

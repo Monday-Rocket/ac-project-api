@@ -1,6 +1,7 @@
 package apply.domain.folder
 
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.data.repository.query.Param
@@ -21,4 +22,8 @@ interface FolderRepository : JpaRepository<Folder, Long> {
     @Query("SELECT f FROM Folder f WHERE f.userId = :userId AND name in :names")
     fun findAllByUserIdAndNameIn(@Param("userId") userId: Long, @Param("names") names: List<String>): List<Folder>
     fun existsByUserIdAndName(userId: Long, name: String): Boolean
+    fun findAllByUserId(userId: Long): List<Folder>
+    @Modifying
+    @Query("UPDATE Folder f SET f.deleted = true WHERE f.userId = :userId")
+    fun deleteBatch(@Param("userId") userId: Long)
 }

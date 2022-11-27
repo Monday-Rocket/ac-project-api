@@ -6,12 +6,15 @@ import apply.domain.link.Link
 import apply.domain.link.LinkRepository
 import apply.domain.link.getById
 import apply.domain.user.User
+import apply.domain.user.UserSignedOutEvent
 import apply.exception.CustomException
 import apply.ui.api.ResponseCode
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.event.TransactionPhase
+import org.springframework.transaction.event.TransactionalEventListener
 import java.time.LocalDateTime
 
 @Transactional
@@ -71,6 +74,11 @@ class LinkService(
                 }
             )
         }
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    fun deleteSignedOutUsersLinks(event: UserSignedOutEvent) {
+        linkRepository.deleteBatch(event.userId)
     }
 
     fun getUnclassifiedLinks(uid: String, pageRequest: PageRequest): Page<LinkResponse>? {

@@ -18,7 +18,7 @@ class Link(
     @Column
     var folderId: Long? = null,
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     var url: String,
 
     @Column

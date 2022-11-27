@@ -47,4 +47,13 @@ class UserRestController(
     ): ResponseEntity<ApiResponse<List<GetByUserIdResponse>>> {
         return ResponseEntity.ok(ApiResponse.success(folderService.getByUserId(userId)))
     }
+
+    @DeleteMapping
+    fun signOut(
+        @LoginUser uid: String
+    ): ResponseEntity<ApiResponse<Unit>> {
+        userService.signOut(uid)
+        return ResponseEntity.ok(ApiResponse.success())
+    }
+
 }
