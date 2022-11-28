@@ -18,6 +18,8 @@ enum class ResponseCode(
 
     DUPLICATE_LINK_URL(3000, "이미 등록된 url입니다.", HttpStatus.BAD_REQUEST),
 
+    DUPLICATE_REPORT(4000, "이미 등록된 신고정보입니다.", HttpStatus.BAD_REQUEST),
+
     HTTPS_MESSAGE_NOT_READABLE(9990, "메시지를 읽을 수 없습니다.", HttpStatus.BAD_REQUEST),
     METHOD_ARGUMENT_NOT_VALID(9991, "잘못된 메시지 형식입니다.", HttpStatus.BAD_REQUEST),
     ILLEGAL_ARGUMENT(9992, "유효하지 않은 데이터입니다.", HttpStatus.BAD_REQUEST)
