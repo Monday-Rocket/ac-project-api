@@ -70,8 +70,8 @@ class UserService(
         } ?: throw IllegalArgumentException("회원이 존재하지 않습니다. uid: $uid")
     }
 
-    fun getByJobGroupId(jobGroupId: Long): List<User> {
-        return userRepository.findAllByInfoJobGroupId(jobGroupId)
+    fun getByJobGroupId(jobGroupId: Long, userId: Long): List<User> {
+        return userRepository.findAllByInfoJobGroupId(jobGroupId, userId)
     }
 
     fun getById(id: Long): User {

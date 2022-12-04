@@ -23,9 +23,10 @@ class JobGroupRestController(
     fun getLinkByJobGroups(
         @PathVariable("jobGroupId") jobGroupId: Long,
         @RequestParam(value = "page_no", required = false) pageNo: Int = 0,
-        @RequestParam(value = "page_size", required = false) pageSize: Int = 10
+        @RequestParam(value = "page_size", required = false) pageSize: Int = 10,
+        @LoginUser uid: String
     ): ResponseEntity<ApiResponse<Page<LinkWithUserResponse>>> {
         return ResponseEntity.ok(ApiResponse.success(
-            linkService.getLinksByJobGroupId(jobGroupId, PageRequest.of(pageNo, pageSize)) ))
+            linkService.getLinksByJobGroupId(jobGroupId, PageRequest.of(pageNo, pageSize), uid) ))
     }
 }

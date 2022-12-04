@@ -179,8 +179,8 @@ class LinkService(
     fun getCurrentLinkByFolderId(folderId: Long): Link?
       = linkRepository.findFirst1ByFolderIdOrderByCreatedDateTime(folderId)
 
-    fun getPageByUserId(users: List<User>, pageRequest: PageRequest): Page<Link> {
-        return linkRepository.findVisiblePageByUserIdIn(users.map { it.id }, pageRequest).let {
+    fun getPageByUserId(users: List<User>, loggedInUserId: Long, pageRequest: PageRequest): Page<Link> {
+        return linkRepository.findVisiblePageByUserIdIn(users.map { it.id }, loggedInUserId, pageRequest).let {
             Page(
                 page_no = it.number,
                 page_size = it.size,
@@ -191,10 +191,11 @@ class LinkService(
         }
     }
 
-    fun getLinksByJobGroupId(id: Long, pageRequest: PageRequest): Page<LinkWithUserResponse> {
+    fun getLinksByJobGroupId(id: Long, pageRequest: PageRequest, uid: String): Page<LinkWithUserResponse> {
+        val me = userService.getByUid(uid)
         val job = jobGroupService.getById(id)
-        val users = userService.getByJobGroupId(job.id)
-        return getPageByUserId(users, pageRequest).let {
+        val users = userService.getByJobGroupId(job.id, me.id)
+        return getPageByUserId(users, me.id, pageRequest).let {
             Page(
                 page_no = it.page_no,
                 page_size = it.page_size,
@@ -208,8 +209,8 @@ class LinkService(
     }
 
     fun searchByKeyword(myLinksOnly: Boolean, uid: String, keyword: String, pageRequest: PageRequest): Page<LinkWithUserResponse> {
+        val me = userService.getByUid(uid)
         if (myLinksOnly) {
-            val me = userService.getByUid(uid)
             val job = jobGroupService.getById(me.info!!.jobGroupId)
             return linkRepository.findPageByUserIdAndTitleContains(me.id, keyword, pageRequest).let {
                 Page(
@@ -225,7 +226,7 @@ class LinkService(
                 )
             }
         } else {
-            return linkRepository.findPageByTitleContains(keyword, pageRequest).let {
+            return linkRepository.findPageByTitleContains(keyword, me.id, pageRequest).let {
                 Page(
                     page_no = it.number,
                     page_size = it.size,
