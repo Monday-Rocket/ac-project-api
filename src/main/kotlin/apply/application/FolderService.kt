@@ -126,7 +126,7 @@ class FolderService(
         return linkService.getByFolderId(folderId, pageRequest)
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     fun updateThumbnail(event: FolderLinkUpdatedEvent) {
         val folder = folderRepository.getById(event.folderId)
         event.thumbnail ?.let {
@@ -137,39 +137,4 @@ class FolderService(
             }
         }
     }
-
-//    private fun findRecruitmentItemsToDelete(recruitmentId: Long, excludedItemIds: List<Long>): List<RecruitmentItem> {
-//        return recruitmentItemRepository
-//            .findByRecruitmentIdOrderByPosition(recruitmentId)
-//            .filterNot { excludedItemIds.contains(it.id) }
-//    }
-//
-//    fun findAllNotHidden(): List<RecruitmentResponse> {
-//        return recruitmentRepository.findAllByHiddenFalse()
-//            .map { RecruitmentResponse(it, termRepository.getById(it.termId)) }
-//    }
-//
-//    fun findAll(): List<RecruitmentResponse> {
-//        return recruitmentRepository.findAll()
-//            .map { RecruitmentResponse(it, termRepository.getById(it.termId)) }
-//    }
-//
-//    fun deleteById(id: Long) {
-//        val recruitment = recruitmentRepository.getById(id)
-//        check(!recruitment.recruitable) { "모집 중인 모집은 삭제할 수 없습니다." }
-//        recruitmentRepository.delete(recruitment)
-//    }
-//
-//    fun getById(id: Long): RecruitmentResponse {
-//        val recruitment = recruitmentRepository.getById(id)
-//        val term = termRepository.getById(recruitment.termId)
-//        return RecruitmentResponse(recruitment, term)
-//    }
-//
-//    fun getNotEndedDataById(id: Long): RecruitmentData {
-//        val recruitment = recruitmentRepository.getById(id)
-//        val term = termRepository.getById(recruitment.termId)
-//        val recruitmentItems = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitment.id)
-//        return RecruitmentData(recruitment, term, recruitmentItems)
-//    }
 }

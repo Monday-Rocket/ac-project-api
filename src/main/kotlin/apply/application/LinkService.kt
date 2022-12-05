@@ -141,15 +141,23 @@ class LinkService(
         request.image ?.let {
             link.image = it
         }
+        link.folderId ?.let {
+            applicationEventPublisher.publishEvent(FolderLinkUpdatedEvent(it))
+        }
         request.folder_id ?.let {
             link.folderId = it
+            applicationEventPublisher.publishEvent(FolderLinkUpdatedEvent(it))
         }
+
     }
 
     fun delete(uid: String, linkId: Long) {
         val user = userService.getByUid(uid)
         val link = linkRepository.getById(linkId)
         if (link.userId != user.id) throw CustomException(ResponseCode.NOT_AUTHORIZED_FOR_THE_DATA)
+        link.folderId ?.let {
+            applicationEventPublisher.publishEvent(FolderLinkUpdatedEvent(it))
+        }
         link.delete()
     }
 
