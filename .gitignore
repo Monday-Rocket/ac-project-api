@@ -15,5 +15,7 @@
 # vendor/
 *.yaml
 
+serviceAccountKey.json
+
 build
 .gradle
