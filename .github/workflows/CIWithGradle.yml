@@ -36,12 +36,6 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Configure GPG Key
-      uses: crazy-max/ghaction-import-gpg@v4
-      with:
-        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-        passphrase: ${{ secrets.SECRET_PWD }}
-
     - name: Install git-secret
       env:
         SECRETS_VERBOSE: 1
@@ -51,12 +45,6 @@ jobs:
         cd git-secret
         sudo make build
         sudo make install
-
-    - name: Reveal secrets
-      env:
-        SECRETS_VERBOSE: 1
-      run: |
-        git secret reveal 
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
