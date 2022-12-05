@@ -20,6 +20,6 @@ class JobGroupService(
     }
 
     fun getById(id: Long): JobGroup {
-        return jobGroupRepository.getById(id) ?: throw IllegalArgumentException("직업군이 존재하지 않습니다. uid: $id")
+        return jobGroupRepository.getById(id)
     }
 }

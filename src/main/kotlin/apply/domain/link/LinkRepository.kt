@@ -26,9 +26,19 @@ interface LinkRepository : JpaRepository<Link, Long> {
             JOIN FETCH Folder f ON l.folderId = f.id
             WHERE l.userId in :userIds
             AND f.visible = true
+            AND l.id NOT IN 
+            (
+                SELECT r.target.targetId FROM Report r 
+                    WHERE r.target.targetType = apply.domain.report.ReportTargetType.LINK
+                    AND r.reporterId = :loggedInUserId
+            )
             ORDER BY l.createdDateTime DESC
     """)
-    fun findVisiblePageByUserIdIn(@Param("userIds") userIds: List<Long>, pageable: Pageable): Page<Link>
+    fun findVisiblePageByUserIdIn(
+        @Param("userIds") userIds: List<Long>,
+        @Param("loggedInUserId") loggedInUserId: Long,
+        pageable: Pageable
+    ): Page<Link>
     fun findFirst1ByFolderIdOrderByCreatedDateTime(folderId: Long): Link?
     fun findPageByUserIdAndTitleContains(userId: Long, title: String, pageable: Pageable): Page<Link>
     @Query("""
@@ -36,9 +46,19 @@ interface LinkRepository : JpaRepository<Link, Long> {
             JOIN FETCH Folder f ON l.folderId = f.id
             WHERE l.title like %:keyword%
             AND f.visible = true
+            AND l.id NOT IN 
+            (
+                SELECT r.target.targetId FROM Report r 
+                    WHERE r.target.targetType = apply.domain.report.ReportTargetType.LINK
+                    AND r.reporterId = :loggedInUserId
+            )
             ORDER BY l.createdDateTime DESC
     """)
-    fun findPageByTitleContains(@Param("keyword") keyword: String, pageable: Pageable): Page<Link>
+    fun findPageByTitleContains(
+        @Param("keyword") keyword: String,
+        @Param("loggedInUserId") loggedInUserId: Long,
+        pageable: Pageable
+    ): Page<Link>
 
     @Modifying
     @Query("UPDATE Link l SET l.deleted = true WHERE l.userId = :userId")

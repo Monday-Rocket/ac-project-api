@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class FolderRestController(
     private val folderService: FolderService,
-    private val linkService: LinkService
 ) {
 
     @PostMapping
