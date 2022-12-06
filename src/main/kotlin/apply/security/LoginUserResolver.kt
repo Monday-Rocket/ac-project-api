@@ -13,7 +13,6 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 private const val BEARER = "Bearer"
 
-@Component
 class LoginUserResolver(
     private val firebaseAuth: FirebaseAuth
 ) : HandlerMethodArgumentResolver {
