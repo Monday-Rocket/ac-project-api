@@ -39,7 +39,7 @@ interface LinkRepository : JpaRepository<Link, Long> {
         @Param("loggedInUserId") loggedInUserId: Long,
         pageable: Pageable
     ): Page<Link>
-    fun findFirst1ByFolderIdOrderByCreatedDateTime(folderId: Long): Link?
+    fun findFirst1ByFolderIdOrderByCreatedDateTimeDesc(folderId: Long): Link?
     fun findPageByUserIdAndTitleContains(userId: Long, title: String, pageable: Pageable): Page<Link>
     @Query("""
         SELECT l FROM Link l

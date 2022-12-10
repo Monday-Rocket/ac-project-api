@@ -7,6 +7,7 @@ import apply.exception.CustomException
 import apply.ui.api.ResponseCode
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener
@@ -126,6 +127,7 @@ class FolderService(
         return linkService.getByFolderId(folderId, pageRequest)
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     fun updateThumbnail(event: FolderLinkUpdatedEvent) {
         val folder = folderRepository.getById(event.folderId)
