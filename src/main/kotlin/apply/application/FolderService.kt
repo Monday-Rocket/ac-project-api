@@ -136,6 +136,8 @@ class FolderService(
         } ?: run {
             linkService.getCurrentLinkByFolderId(event.folderId)?.image ?. let {
                 folder.thumbnail = Thumbnail(it)
+            } ?: run {
+                folder.thumbnail = null
             }
         }
     }
