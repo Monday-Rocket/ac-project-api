@@ -12,7 +12,7 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 private const val BEARER = "Bearer"
 
-class LoginUserResolver(
+class ProdLoginUserResolver(
     private val firebaseAuth: FirebaseAuth
 ) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {

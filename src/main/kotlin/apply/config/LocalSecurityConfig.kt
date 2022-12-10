@@ -17,8 +17,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 
 @EnableWebSecurity
-@Profile("prod")
-class SecurityConfig : WebSecurityConfigurerAdapter(), WebMvcConfigurer {
+@Profile("local")
+class LocalSecurityConfig : WebSecurityConfigurerAdapter(), WebMvcConfigurer {
 
     override fun configure(http: HttpSecurity) {
         http {
@@ -31,19 +31,13 @@ class SecurityConfig : WebSecurityConfigurerAdapter(), WebMvcConfigurer {
     }
 
     @Bean
-    fun firebaseAuth(): FirebaseAuth {
-        FirebaseApp.initializeApp()
-        return FirebaseAuth.getInstance()
-    }
-
-    @Bean
     fun passwordEncoder(): PasswordEncoder {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder()
     }
 
     @Bean
-    fun loginUserResolver(): ProdLoginUserResolver {
-        return ProdLoginUserResolver(firebaseAuth())
+    fun loginUserResolver(): LocalLoginUserResolver {
+        return LocalLoginUserResolver()
     }
 
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
