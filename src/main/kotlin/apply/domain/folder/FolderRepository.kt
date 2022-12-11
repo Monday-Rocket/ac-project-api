@@ -13,12 +13,25 @@ interface FolderRepository : JpaRepository<Folder, Long> {
     fun findAllByVisibleFalse(): List<Folder>
 
     @Query("""
-        SELECT f FROM Folder f 
+        SELECT f
+        FROM Folder f
+        LEFT OUTER JOIN FETCH Link l ON f.id = l.folderId
         WHERE f.userId = :userId 
         AND f.visible = true
+        GROUP BY f.id
+        ORDER BY MAX(l.createdDateTime) DESC
     """)
     fun findVisibleByUserIdOrderByCreatedDateTime(@Param("userId") userId: Long): List<Folder>
-    fun findAllByUserIdOrderByCreatedDateTime(userId: Long): List<Folder>
+
+    @Query("""
+        SELECT f
+        FROM Folder f
+        LEFT OUTER JOIN FETCH Link l ON f.id = l.folderId
+        WHERE f.userId = :userId 
+        GROUP BY f.id
+        ORDER BY MAX(l.createdDateTime) DESC
+    """)
+    fun findAllByUserIdOrderByCreatedDateTime(@Param("userId") userId: Long): List<Folder>
     @Query("SELECT f FROM Folder f WHERE f.userId = :userId AND name in :names")
     fun findAllByUserIdAndNameIn(@Param("userId") userId: Long, @Param("names") names: List<String>): List<Folder>
     fun existsByUserIdAndName(userId: Long, name: String): Boolean
