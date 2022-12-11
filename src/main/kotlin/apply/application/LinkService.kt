@@ -34,7 +34,7 @@ class LinkService(
                 describe = it.describe,
                 image = it.image,
                 folderId = it.folder_id,
-                createdDateTime = it.created_date_time ?: LocalDateTime.now()
+                createdDateTime = it.created_at ?: LocalDateTime.now()
             )
         })
         val folderIdSet = mutableSetOf<Long>()
@@ -117,7 +117,7 @@ class LinkService(
                 describe = request.describe,
                 image = request.image,
                 folderId = request.folder_id,
-                createdDateTime = request.created_date_time ?: LocalDateTime.now()
+                createdDateTime = request.created_at ?: LocalDateTime.now()
             )
         )
         link.folderId ?.let {

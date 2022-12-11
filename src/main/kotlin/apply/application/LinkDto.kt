@@ -11,7 +11,7 @@ data class SaveLinkWithFolderNameRequest(
     val describe: String? = null,
     val image: String? = null,
     val folder_name: String? = null,
-    val created_date_time: LocalDateTime? = null
+    val created_at: LocalDateTime? = null
 )
 
 data class SaveLinkRequest(
@@ -20,7 +20,7 @@ data class SaveLinkRequest(
     val describe: String? = null,
     val image: String? = null,
     val folder_id: Long? = null,
-    val created_date_time: LocalDateTime? = null
+    val created_at: LocalDateTime? = null
 )
 
 data class UpdateLinkRequest(

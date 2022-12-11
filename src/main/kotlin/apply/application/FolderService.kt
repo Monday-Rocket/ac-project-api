@@ -33,7 +33,7 @@ class FolderService(
                 userId = user.id,
                 name = it.name,
                 visible = it.visible ?: false,
-                createdDateTime = it.created_date_time ?: LocalDateTime.now()
+                createdDateTime = it.created_at ?: LocalDateTime.now()
             )
         })
     }
@@ -48,7 +48,7 @@ class FolderService(
                 userId = user.id,
                 name = request.name,
                 visible = request.visible ?: false,
-                createdDateTime = request.created_date_time ?: LocalDateTime.now()
+                createdDateTime = request.created_at ?: LocalDateTime.now()
             )
         )
     }

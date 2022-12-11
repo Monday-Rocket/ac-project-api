@@ -23,7 +23,7 @@ class BulkService(
                 describe = it.describe,
                 image = it.image,
                 folder_id = folders.find { folder -> it.folder_name == folder.name }?.id,
-                created_date_time = it.created_date_time
+                created_at = it.created_at
             )
         })
     }
