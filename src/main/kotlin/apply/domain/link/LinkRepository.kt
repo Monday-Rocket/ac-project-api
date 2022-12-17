@@ -44,7 +44,7 @@ interface LinkRepository : JpaRepository<Link, Long> {
     @Query("""
         SELECT l FROM Link l
             JOIN FETCH Folder f ON l.folderId = f.id
-            WHERE l.title like %:keyword%
+            WHERE REPLACE(REPLACE(l.title, ' ', ''), '\n', '') like %:keyword%
             AND f.visible = true
             AND l.id NOT IN 
             (

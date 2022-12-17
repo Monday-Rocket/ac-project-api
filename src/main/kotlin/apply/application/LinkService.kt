@@ -218,9 +218,10 @@ class LinkService(
 
     fun searchByKeyword(myLinksOnly: Boolean, uid: String, keyword: String, pageRequest: PageRequest): Page<LinkWithUserResponse> {
         val me = userService.getByUid(uid)
+        val processedKeyword = preprocessKeyword(keyword)
         if (myLinksOnly) {
             val job = jobGroupService.getById(me.info!!.jobGroupId)
-            return linkRepository.findPageByUserIdAndTitleContains(me.id, keyword, pageRequest).let {
+            return linkRepository.findPageByUserIdAndTitleContains(me.id, processedKeyword, pageRequest).let {
                 Page(
                     page_no = it.number,
                     page_size = it.size,
@@ -234,7 +235,7 @@ class LinkService(
                 )
             }
         } else {
-            return linkRepository.findPageByTitleContains(keyword, me.id, pageRequest).let {
+            return linkRepository.findPageByTitleContains(processedKeyword, me.id, pageRequest).let {
                 Page(
                     page_no = it.number,
                     page_size = it.size,
@@ -251,4 +252,9 @@ class LinkService(
             }
         }
     }
+
+    private fun preprocessKeyword(keyword: String)
+        = keyword.deleteSpace()
+
+    private fun String.deleteSpace() = this.filterNot { it.isWhitespace() }
 }
