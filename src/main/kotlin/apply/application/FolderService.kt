@@ -73,6 +73,7 @@ class FolderService(
         val user = userService.getByUid(uid)
         val folder = folderRepository.getById(folderId)
         if (folder.userId != user.id) throw CustomException(ResponseCode.NOT_AUTHORIZED_FOR_THE_DATA)
+        linkService.deleteByFolder(folderId)
         folder.delete()
     }
 

@@ -62,5 +62,9 @@ interface LinkRepository : JpaRepository<Link, Long> {
 
     @Modifying
     @Query("UPDATE Link l SET l.deleted = true WHERE l.userId = :userId")
-    fun deleteBatch(@Param("userId") userId: Long)
+    fun deleteBatchByUserId(@Param("userId") userId: Long)
+
+    @Modifying
+    @Query("UPDATE Link l SET l.deleted = true WHERE l.folderId = :folderId")
+    fun deleteBatchByFolderId(@Param("folderId") folderId: Long)
 }

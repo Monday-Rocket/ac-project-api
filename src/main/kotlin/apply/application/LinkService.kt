@@ -1,7 +1,6 @@
 package apply.application
 
 import apply.domain.folder.FolderLinkUpdatedEvent
-import apply.domain.jobgroup.getById
 import apply.domain.link.Link
 import apply.domain.link.LinkRepository
 import apply.domain.link.getById
@@ -78,7 +77,7 @@ class LinkService(
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     fun deleteSignedOutUsersLinks(event: UserSignedOutEvent) {
-        linkRepository.deleteBatch(event.userId)
+        linkRepository.deleteBatchByUserId(event.userId)
     }
 
     fun getUnclassifiedLinks(uid: String, pageRequest: PageRequest): Page<LinkResponse>? {
@@ -251,6 +250,10 @@ class LinkService(
                 )
             }
         }
+    }
+
+    fun deleteByFolder(folderId: Long) {
+        linkRepository.deleteBatchByFolderId(folderId)
     }
 
     private fun preprocessKeyword(keyword: String)
