@@ -105,9 +105,6 @@ class LinkService(
 
     fun create(uid: String, request: SaveLinkRequest) {
         val user = userService.getByUid(uid)
-        if (linkRepository.existsByUserIdAndUrl(user.id, request.url)) {
-            throw CustomException(ResponseCode.DUPLICATE_LINK_URL)
-        }
         val link = linkRepository.save(
             Link(
                 userId = user.id,
