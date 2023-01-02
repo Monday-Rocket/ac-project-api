@@ -5,7 +5,7 @@
 
     <springProfile name="file-logging">
         <property name="LOG_PATH" value="./logs"/>
-        <property name="LOG_FILE_NAME" value="apply"/>
+        <property name="LOG_FILE_NAME" value="linkpool"/>
         <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
