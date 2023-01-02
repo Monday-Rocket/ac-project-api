@@ -19,7 +19,7 @@ interface UserRepository : JpaRepository<User, Long> {
             WHERE u.id NOT IN 
             (
                 SELECT r.target.targetId FROM Report r 
-                    WHERE r.target.targetType = apply.domain.report.ReportTargetType.USER
+                    WHERE r.target.targetType = linkpool.domain.report.ReportTargetType.USER
                     AND r.reporterId = :userId
             )
             AND u.info.jobGroupId = :jobGroupId

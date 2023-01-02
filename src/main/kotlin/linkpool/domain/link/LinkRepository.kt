@@ -29,7 +29,7 @@ interface LinkRepository : JpaRepository<Link, Long> {
             AND l.id NOT IN 
             (
                 SELECT r.target.targetId FROM Report r 
-                    WHERE r.target.targetType = apply.domain.report.ReportTargetType.LINK
+                    WHERE r.target.targetType = linkpool.domain.report.ReportTargetType.LINK
                     AND r.reporterId = :loggedInUserId
             )
             ORDER BY l.createdDateTime DESC
@@ -49,7 +49,7 @@ interface LinkRepository : JpaRepository<Link, Long> {
             AND l.id NOT IN 
             (
                 SELECT r.target.targetId FROM Report r 
-                    WHERE r.target.targetType = apply.domain.report.ReportTargetType.LINK
+                    WHERE r.target.targetType = linkpool.domain.report.ReportTargetType.LINK
                     AND r.reporterId = :loggedInUserId
             )
             ORDER BY l.createdDateTime DESC
