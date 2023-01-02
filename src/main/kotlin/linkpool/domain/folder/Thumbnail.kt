@@ -5,6 +5,6 @@ import javax.persistence.Embeddable
 
 @Embeddable
 data class Thumbnail(
-    @Column
+    @Column(length = 500)
     val image: String,
 )

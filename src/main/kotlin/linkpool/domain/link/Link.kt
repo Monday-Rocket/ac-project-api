@@ -17,13 +17,13 @@ class Link(
     @Column
     var folderId: Long? = null,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     var url: String,
 
-    @Column
+    @Column(length = 30)
     var title: String? = null,
 
-    @Column
+    @Column(length = 500)
     var image: String? = null,
 
     @Column(length = 550)
